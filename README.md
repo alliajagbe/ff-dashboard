@@ -3,14 +3,20 @@
 A tabbed analytics product. Six pages following the founder journey: Overview, then Discover,
 Apply, Program, Community, Alumni. Built from every source registered in `sources.py`.
 
-Live: https://claude.ai/artifact/6Kcqdk69xPqt3KErH9FgFP (private until you share it)
+Live: https://alliajagbe.github.io/ff-dashboard/
+
+This is a public URL. Anyone with the link can read it. It carries no personal data,
+but it does expose capital amounts, partner names, cohort names and the data quality
+findings, so treat the link as shareable-internally rather than secret.
 
 ## Refreshing
 
     python3 build_from_csv.py     # from the CSV exports on disk
     python3 refresh.py            # live from the Airtable API (needs .env)
+    git add data.js && git commit -m "refresh data" && git push
 
-Both write `data.js`, the only file the page reads. Republish the artifact afterwards.
+Both write `data.js`, the only file the page reads. Pushing to main redeploys the
+site in about a minute. Nothing else needs to change.
 
 ## Adding a source
 
@@ -56,3 +62,13 @@ reaching `data.js`. Escalate where that file lives; do not route it through this
     ff_lib.py           loading, entity resolution, aggregation, safety assertions
     build_from_csv.py   CSV to data.js
     refresh.py          Airtable API to data.js
+
+## Source files stay local
+
+`.gitignore` excludes every CSV, DOCX and PDF. The exports live on your machine and
+never enter the repository. Only the aggregated `data.js` is published.
+
+## Export buttons
+
+On the hosted site the CSV buttons copy to the clipboard, because saving a file
+directly needs a runtime the plain web page does not have. Paste into a sheet.
