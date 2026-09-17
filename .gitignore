@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.pyc
+# Source exports stay local. Only the aggregated data.js is published.
+*.csv
+*.docx
+*.pdf
