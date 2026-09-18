@@ -114,3 +114,23 @@ BY_ID = {s['id']: s for s in SOURCES}
 FORBIDDEN = ['email', 'e-mail', 'account number', 'routing', 'ein', 'ssn',
              'phone', 'linkedin', 'mailing address', 'legal business address',
              'headshot', 'beneficiary']
+
+
+# City to region. Edit this rather than the code when a city is misfiled or added.
+# Anything not listed falls into "Other", which the UI labels honestly.
+REGIONS = {
+    'Atlantic': ['Bronx', 'Newark', 'Philadelphia', 'New York', 'Baltimore', 'Washington, DC',
+                 'Nyack', 'Brooklyn', 'Jersey City', 'East Orange', 'South Orange', 'Laurelton',
+                 'Lawrence Township', 'Folcroft', 'Silver Spring', 'Queensbury', 'Portsmouth',
+                 'University Park'],
+    'South Central': ['Louisville', 'Houston', 'Tulsa', 'Austin', 'New Orleans', 'Dallas',
+                      'San Antonio', 'Leander', 'Glenn Heights', 'New Albany', 'Hoyt'],
+    'Tribal Nations & Southwest': ['Albuquerque', 'Santa Fe', 'Phoenix', 'Gallup', 'Jermez Pueblo'],
+    'Southeast': ['Miami', 'Atlanta', 'Jacksonville', 'Charlotte', 'Durham', 'Columbia',
+                  'Orlando', 'Norcross', 'Fairburn', 'Graham', 'Carrboro', 'Matthews'],
+    'Midwest': ['Detroit', 'Saint Paul', 'Minneapolis', 'Chicago', 'Flint', 'Indianapolis',
+                'Kansas City'],
+    'West': ['Los Angeles', 'Oakland', 'San Francisco', 'Denver', 'Seattle', 'San Diego',
+             'Long Beach', 'Calabasas'],
+}
+CITY_REGION = {c: r for r, cities in REGIONS.items() for c in cities}

@@ -41,10 +41,19 @@ reaching `data.js`. Escalate where that file lives; do not route it through this
 
 ## Self-serve features
 
-  Provenance    click any tile for source file, field, denominator and conflicting sources
-  Deep links    tab and filters encode into the URL, so a view can be sent rather than described
-  CSV export    the CSV buttons use the artifact downloads capability, clipboard as fallback
-  Metric search the Find a metric box filters sections and tiles on the current tab
+  Crossfilter   click any bar, donut segment, trend point or matrix cell to filter everything
+  Cross-tab     Explore page pivots any two of 16 dimensions against each other
+  Deep links    page, year range and every filter encode into the URL
+  Theme         light by default, dark by toggle, remembered per browser
+
+### How crossfilter behaves
+
+Within a dimension values OR together (Louisville plus Newark shows both). Across dimensions
+they AND together (Louisville and Black is the intersection). A chart on dimension D ignores
+D's own selection, so selecting Louisville does not collapse the city chart to one bar.
+
+Worked example. Click Louisville on the city chart, then Black on the race chart: 19 founders,
+95% of Louisville's 20, Technology 7 / Service 6, Start-Up 11 / Development 6 / Growth 2.
 
 ## What the product deliberately refuses to do
 
@@ -52,7 +61,7 @@ reaching `data.js`. Escalate where that file lives; do not route it through this
   shares only 41 email addresses with the grants table.
   Filter demographics. Aggregate only, because cohorts of four make race by city identifying.
   Pool PitchProv scores. Two events served students and two served founders.
-  Report percentages below n=10.
+  Report a percentage below 5 founders. The count still shows; the share reads n<5.
 
 ## Files
 
@@ -72,3 +81,11 @@ never enter the repository. Only the aggregated `data.js` is published.
 
 On the hosted site the CSV buttons copy to the clipboard, because saving a file
 directly needs a runtime the plain web page does not have. Paste into a sheet.
+
+## A note on demographics and the public URL
+
+Race, gender, veteran and LGBTQI+ flags are in the row data so that any filter combination
+works. Percentages below 5 founders are suppressed in the interface, but the rows themselves
+are readable in data.js, so that suppression is a courtesy rather than a control. If the
+demographic detail ever needs to be genuinely restricted, the lever is access-controlled
+hosting, not the interface. Cloudflare Pages with Access covers it on the free tier.

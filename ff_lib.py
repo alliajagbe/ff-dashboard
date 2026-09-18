@@ -177,25 +177,57 @@ def founder_graph(loaded):
 
 # ------------------------------------------------------------- award rows
 def award_rows(grants):
-    """De-identified one row per award, for client side filtering."""
+    """One row per award, carrying every dimension the dashboard filters on.
+
+    Demographics are present only where the record links to a founder profile,
+    which is 95 of 126 founders. Every demographic measure in the UI prints that
+    denominator rather than implying the full table.
+    """
     def fkey(r):
         e = norm_email(g(r, 'Main Email (from Link Field)'))
         return 'e:' + e if e else 'n:' + norm_name(g(r, "Founder's Name"))
 
     ids = {k: i + 1 for i, k in enumerate(sorted({fkey(r) for r in grants}))}
+    RACE = [('black', 'Black / African American'),
+            ('latinx', 'Latinx / Latino / Hispanic'),
+            ('aapi', 'Asian American / Pacific Islander'),
+            ('indigenous', 'Indigenous / Native American / Native Hawaiian'),
+            ('multiracial', 'Multiracial')]
+
+    def yn(r, col):
+        v = g(r, col)
+        return True if v == 'Yes' else (False if v == 'No' else None)
+
     out = []
     for r in grants:
         y = year_of(g(r, 'Participation year'))
+        city = g(r, 'City')
+        linked = bool(g(r, 'Link Field'))
         out.append({
             'f': ids[fkey(r)], 'y': y, 'amt': round(money(g(r, 'Capital amount'))),
-            'cap': g(r, 'Type of capital received'), 'st': g(r, 'State'),
-            'city': g(r, 'City'),
+            'captype': g(r, 'Type of capital received'),
+            'state': g(r, 'State'), 'city': city,
+            'region': S.CITY_REGION.get(city, 'Other' if city else ''),
             'stage': g(r, 'Growth Stage (from Link Field)').split(' - ')[0],
-            'sol': g(r, 'Solution Type (from Link Field)'),
+            'solution': g(r, 'Solution Type (from Link Field)'),
             'alive': g(r, 'Still in business? '),
             'purpose': g(r, 'Purpose'), 'era': era_of(y),
-            'partner': g(r, 'Partner'), 'cohort': g(r, 'Cohort name'),
-            'linked': bool(g(r, 'Link Field')),
+            'partner': [p.strip() for p in g(r, 'Partner').split(',') if p.strip()],
+            'cohort': g(r, 'Cohort name'),
+            'linked': linked,
+            # A founder may select more than one race, so this is a list and the
+            # shares it produces do not sum to 100.
+            'race': [k for k, col in RACE
+                     if linked and g(r, col + ' (Race) (from Link Field)') == 'Yes'],
+            'gender': ('Female-identified' if yn(r, 'Female-Identified? (Owner Demographics) (from Link Field)')
+                       else ('Not female-identified' if linked and yn(
+                           r, 'Female-Identified? (Owner Demographics) (from Link Field)') is False else '')),
+            'veteran': ('Veteran' if yn(r, 'Veteran? (Owner Demographics) (from Link Field)')
+                        else ('Non-veteran' if linked and yn(
+                            r, 'Veteran? (Owner Demographics) (from Link Field)') is False else '')),
+            'lgbtq': ('LGBTQI+' if yn(r, 'LGBTQI+? (Owner Demographics) (from Link Field)')
+                      else ('Not LGBTQI+' if linked and yn(
+                          r, 'LGBTQI+? (Owner Demographics) (from Link Field)') is False else '')),
         })
     return out
 

@@ -5,1031 +5,989 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
 :root{
-  --bg:#FCFCFD; --surface:#FFFFFF; --surface-2:#F5F5F7; --surface-3:#EDEDF0;
-  --line:#E6E6EA; --line-soft:#F0F0F3;
-  --text:#0A0A0B; --text-2:#55555F; --text-3:#8C8C96;
-  --accent:#5B3DF5;
-  --ok:#00897C; --warn:#A16207; --no:#BE1D52;
-  --ok-w:#E6F2F0; --warn-w:#F5EEDF; --no-w:#F9E7EC;
-  --hatch:#D4D4DA;
-  --s1:#5B3DF5; --s2:#00897C; --s3:#A16207; --s4:#BE1D52;
-  --shadow:0 1px 2px rgba(10,10,15,.04), 0 8px 24px -12px rgba(10,10,15,.10);
+  --bg:#F4F6FA; --card:#FFFFFF; --card-2:#F8FAFC; --card-3:#EEF2F8;
+  --line:#E6EBF3; --line-2:#F0F4F9;
+  --text:#0F172A; --text-2:#55637A; --text-3:#93A1B8;
+  --accent:#5B3DF5; --accent-soft:#EEEAFE;
+  --ok:#0E8AA3; --warn:#A8720A; --no:#BE1D52;
+  --ok-w:#E4F3F6; --warn-w:#F7F0E1; --no-w:#FBE8EE;
+  --s1:#5B3DF5; --s2:#0E8AA3; --s3:#A8720A; --s4:#BE1D52; --s5:#8796AE;
+  --hatch:#C3CDDC;
+  --shadow:0 1px 2px rgba(15,23,42,.05), 0 12px 28px -14px rgba(15,23,42,.16);
+  --shadow-lg:0 2px 6px rgba(15,23,42,.06), 0 24px 48px -20px rgba(15,23,42,.24);
+  --r:14px;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#08080A; --surface:#101014; --surface-2:#17171C; --surface-3:#202027;
-  --line:#242429; --line-soft:#1A1A1F;
-  --text:#FAFAFA; --text-2:#A2A2AC; --text-3:#6D6D78;
-  --accent:#8B72FF;
-  --ok:#1FA492; --warn:#C97B26; --no:#DC5580;
-  --ok-w:#0E2623; --warn-w:#271C0E; --no-w:#2B1219;
-  --hatch:#2E2E36;
-  --s1:#8B72FF; --s2:#1FA492; --s3:#C97B26; --s4:#DC5580;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
-}}
 :root[data-theme="dark"]{
-  --bg:#08080A; --surface:#101014; --surface-2:#17171C; --surface-3:#202027;
-  --line:#242429; --line-soft:#1A1A1F;
-  --text:#FAFAFA; --text-2:#A2A2AC; --text-3:#6D6D78;
-  --accent:#8B72FF;
-  --ok:#1FA492; --warn:#C97B26; --no:#DC5580;
-  --ok-w:#0E2623; --warn-w:#271C0E; --no-w:#2B1219;
-  --hatch:#2E2E36;
-  --s1:#8B72FF; --s2:#1FA492; --s3:#C97B26; --s4:#DC5580;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+  --bg:#080C1A; --card:#111A2E; --card-2:#18233B; --card-3:#1F2C49;
+  --line:#22304D; --line-2:#182440;
+  --text:#F1F5F9; --text-2:#9AAAC4; --text-3:#64748B;
+  --accent:#8B72FF; --accent-soft:#1E1B45;
+  --ok:#35A5BC; --warn:#C08A1A; --no:#DC5580;
+  --ok-w:#0C2B33; --warn-w:#2B2109; --no-w:#33121F;
+  --s1:#8B72FF; --s2:#35A5BC; --s3:#C08A1A; --s4:#DC5580; --s5:#6B7C99;
+  --hatch:#2B3A59;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 32px -16px rgba(0,0,0,.8);
+  --shadow-lg:0 2px 8px rgba(0,0,0,.5), 0 28px 56px -22px rgba(0,0,0,.9);
 }
 
 *{box-sizing:border-box}
+html,body{margin:0}
 body{background:var(--bg); color:var(--text);
   font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  font-size:14px; line-height:1.55; padding:0 0 72px; letter-spacing:-.006em;
-  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility}
-.wrap{max-width:1180px; margin:0 auto; padding-left:24px; padding-right:24px}
-h1,h2,h3,h4{margin:0; font-weight:600; letter-spacing:-.025em; text-wrap:balance}
-.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-  font-variant-numeric:tabular-nums; letter-spacing:-.02em}
-.num{font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1}
-.eyebrow{font-family:"JetBrains Mono",monospace; font-size:10px; font-weight:500;
-  letter-spacing:.16em; text-transform:uppercase; color:var(--text-3)}
-:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px}
-button{font-family:inherit; letter-spacing:inherit}
+  font-size:14px; line-height:1.5; letter-spacing:-.006em; -webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0; font-weight:600; letter-spacing:-.026em}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace; font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em}
+.eyebrow{font-family:"JetBrains Mono",monospace; font-size:9.5px; font-weight:500;
+  letter-spacing:.15em; text-transform:uppercase; color:var(--text-3)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:6px}
+button{font-family:inherit; letter-spacing:inherit; cursor:pointer}
 
-/* ---------- nav ---------- */
-.rail{position:sticky; top:0; z-index:30; background:color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter:saturate(180%) blur(12px); -webkit-backdrop-filter:saturate(180%) blur(12px);
-  border-bottom:1px solid var(--line)}
-.rail-in{max-width:1180px; margin:0 auto; padding:0 24px; display:flex; align-items:center;
-  gap:2px; overflow-x:auto; scrollbar-width:none}
-.rail-in::-webkit-scrollbar{display:none}
-.tab{appearance:none; background:none; border:0; cursor:pointer; white-space:nowrap;
-  padding:15px 12px 14px; color:var(--text-3); position:relative; font-size:13.5px;
-  font-weight:500; letter-spacing:-.012em; display:flex; align-items:baseline; gap:7px}
-.tab .tn{font-family:"JetBrains Mono",monospace; font-size:10px; font-weight:500;
-  color:var(--text-3); opacity:.6}
-.tab:hover{color:var(--text-2)}
-.tab[aria-selected="true"]{color:var(--text); font-weight:600}
-.tab[aria-selected="true"]::after{content:""; position:absolute; left:12px; right:12px; bottom:-1px;
-  height:2px; background:var(--accent); border-radius:2px}
-.tab[aria-selected="true"] .tn{color:var(--accent); opacity:1}
-.chev,.rail-sep{display:none}
+/* ================= shell ================= */
+.app{display:grid; grid-template-columns:232px 1fr; min-height:100vh}
+.side{background:var(--card); border-right:1px solid var(--line); padding:20px 14px;
+  display:flex; flex-direction:column; gap:22px; position:sticky; top:0; height:100vh;
+  overflow-y:auto}
+.brand{display:flex; align-items:center; gap:10px; padding:0 8px}
+.mark{width:32px; height:32px; border-radius:9px; flex:none;
+  background:linear-gradient(140deg, var(--s1), var(--s2)); display:grid; place-items:center;
+  color:#fff; font-weight:700; font-size:13px; letter-spacing:-.03em}
+.brand .bt{font-weight:600; font-size:14px; letter-spacing:-.03em; line-height:1.15}
+.brand .bs{font-size:10.5px; color:var(--text-3); letter-spacing:-.005em}
+.nav{display:flex; flex-direction:column; gap:2px}
+.nav .nl{font-family:"JetBrains Mono",monospace; font-size:9px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--text-3); padding:0 10px; margin:6px 0 4px}
+.nav button{display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+  background:none; border:0; padding:9px 10px; border-radius:9px; color:var(--text-2);
+  font-size:13.5px; font-weight:500; letter-spacing:-.012em; transition:all .13s}
+.nav button:hover{background:var(--card-2); color:var(--text)}
+.nav button[aria-current="true"]{background:var(--accent-soft); color:var(--accent); font-weight:600}
+.nav .ico{width:18px; height:18px; flex:none; opacity:.85}
+.nav button[aria-current="true"] .ico{opacity:1}
+.side-foot{margin-top:auto; font-size:10.5px; color:var(--text-3); line-height:1.6; padding:0 10px}
+.side-foot b{color:var(--text-2); font-weight:500}
 
-/* ---------- masthead ---------- */
-.mast{padding-block:44px 30px; display:flex; flex-wrap:wrap; gap:22px 40px;
-  align-items:flex-end; justify-content:space-between}
-.mast h1{font-size:clamp(30px,4.6vw,46px); font-weight:600; letter-spacing:-.042em; line-height:1.02}
-.mast .sub{color:var(--text-2); font-size:14.5px; max-width:54ch; margin-top:12px; letter-spacing:-.008em}
-.stamp{font-family:"JetBrains Mono",monospace; font-size:11px; line-height:1.9; color:var(--text-3);
-  text-align:right; font-variant-numeric:tabular-nums}
-.stamp b{color:var(--text); font-weight:500}
+.main{min-width:0; display:flex; flex-direction:column}
+.top{position:sticky; top:0; z-index:25; background:color-mix(in srgb,var(--bg) 86%,transparent);
+  backdrop-filter:saturate(180%) blur(14px); -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid var(--line); padding:14px 26px; display:flex; flex-wrap:wrap;
+  gap:10px; align-items:center}
+.top h1{font-size:17px; font-weight:600; letter-spacing:-.03em; margin-right:4px}
+.top .sub{font-size:11.5px; color:var(--text-3); width:100%; order:9; margin-top:-2px}
+.grow{flex:1}
+.ctl{font:500 12.5px/1 "Instrument Sans",sans-serif; color:var(--text); background:var(--card);
+  border:1px solid var(--line); border-radius:9px; padding:8px 10px; transition:border-color .12s}
+.ctl:hover{border-color:var(--text-3)}
+select.ctl{padding-right:8px}
+.iconbtn{background:var(--card); border:1px solid var(--line); border-radius:9px; width:34px;
+  height:34px; display:grid; place-items:center; color:var(--text-2); transition:all .12s}
+.iconbtn:hover{color:var(--text); border-color:var(--text-3)}
+.body{padding:20px 26px 70px}
 
-/* ---------- controls ---------- */
-.filters{display:flex; flex-wrap:wrap; gap:8px; align-items:center;
-  padding:0 0 14px; border-bottom:1px solid var(--line)}
-.f-lab{display:none}
-.filters label{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--text-3)}
-.filters select,.filters input{font:500 12.5px/1 "Instrument Sans",sans-serif; color:var(--text);
-  background:var(--surface); border:1px solid var(--line); border-radius:7px; padding:8px 10px;
-  letter-spacing:-.01em; transition:border-color .12s}
-.filters select:hover,.filters input:hover{border-color:var(--text-3)}
-.filters input[type=search]{min-width:170px}
-.btn{font:500 12.5px/1 "Instrument Sans",sans-serif; color:var(--text-2); background:var(--surface);
-  border:1px solid var(--line); border-radius:7px; padding:8px 12px; cursor:pointer;
-  letter-spacing:-.01em; transition:all .12s}
-.btn:hover{border-color:var(--text-3); color:var(--text)}
-.btn.on{background:var(--accent); border-color:var(--accent); color:#fff}
-.spacer{flex:1}
-.scopeline{width:100%; margin-top:12px; font-family:"JetBrains Mono",monospace; font-size:11px;
-  color:var(--text-3); display:flex; flex-wrap:wrap; gap:4px 20px; font-variant-numeric:tabular-nums}
-.scopeline b{color:var(--text-2); font-weight:500}
+/* ================= filter chips ================= */
+.chips{display:flex; flex-wrap:wrap; gap:7px; align-items:center; padding:12px 0 4px;
+  min-height:20px}
+.chips .lab{font-family:"JetBrains Mono",monospace; font-size:9.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--text-3); margin-right:2px}
+.chip{display:inline-flex; align-items:center; gap:7px; background:var(--accent-soft);
+  color:var(--accent); border:0; border-radius:999px; padding:5px 9px 5px 11px;
+  font-size:12px; font-weight:500; letter-spacing:-.01em}
+.chip .d{font-family:"JetBrains Mono",monospace; font-size:9px; opacity:.65;
+  text-transform:uppercase; letter-spacing:.08em}
+.chip .x{width:15px; height:15px; border-radius:50%; display:grid; place-items:center;
+  background:color-mix(in srgb,var(--accent) 16%,transparent); font-size:11px; line-height:1}
+.chip:hover .x{background:var(--accent); color:var(--card)}
+.chip-clear{background:none; border:1px dashed var(--line); color:var(--text-3);
+  border-radius:999px; padding:5px 11px; font-size:12px}
+.chip-clear:hover{color:var(--text); border-color:var(--text-3)}
+.chips-empty{font-size:12px; color:var(--text-3)}
 
-/* ---------- page ---------- */
-.page{margin-top:34px}
-.page[hidden]{display:none}
-.phead{margin-bottom:26px; max-width:68ch}
-.phead h2{font-size:26px; font-weight:600; letter-spacing:-.034em}
-.phead p{color:var(--text-2); font-size:14.5px; margin:9px 0 0; letter-spacing:-.008em}
-.sec{margin-top:40px}
-.sechead{display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px; margin-bottom:16px}
-.sechead h3{font-size:15px; font-weight:600; letter-spacing:-.022em}
-.sechead .why{font-size:12.5px; color:var(--text-3); flex:1 1 260px; letter-spacing:-.005em}
-
-/* ---------- stat tiles ---------- */
-.tiles{display:grid; grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));
-  gap:0; border-top:1px solid var(--line)}
-@media (max-width:980px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:540px){.tiles{grid-template-columns:1fr}}
-.tile{background:none; padding:18px 20px 20px 0; display:flex; flex-direction:column; gap:3px;
-  text-align:left; border:0; border-bottom:1px solid var(--line-soft); font:inherit; color:inherit;
-  cursor:pointer; position:relative; transition:background .12s}
-.tile:hover{background:var(--surface-2)}
-.tile:hover .src{opacity:1}
-.tile .n{font-size:clamp(26px,3.1vw,33px); font-weight:600; letter-spacing:-.045em; line-height:1.05;
-  font-variant-numeric:tabular-nums; margin-bottom:2px}
-.tile .l{font-size:13px; font-weight:500; color:var(--text); letter-spacing:-.014em}
-.tile .h{font-size:11.5px; color:var(--text-3); line-height:1.5; letter-spacing:-.004em}
-.tile .src{position:absolute; top:19px; right:14px; font-family:"JetBrains Mono",monospace;
-  font-size:9px; letter-spacing:.09em; color:var(--text-3); opacity:.45; transition:opacity .12s}
-.tile.flag .src{color:var(--warn); opacity:1; font-weight:500}
-
-/* ---------- cards ---------- */
-.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:14px}
-.card{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:18px 20px 16px}
-.card.wide{grid-column:1/-1}
-.card h4{font-size:13.5px; font-weight:600; letter-spacing:-.02em}
-.card .cap{font-size:11.5px; color:var(--text-3); line-height:1.55; margin:4px 0 16px;
-  letter-spacing:-.004em}
+/* ================= cards ================= */
+.grid{display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:14px;
+  margin-top:14px; align-items:start}
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--r);
+  padding:16px 18px 14px; box-shadow:var(--shadow); grid-column:span 6; min-width:0}
+.c3{grid-column:span 3} .c4{grid-column:span 4} .c5{grid-column:span 5}
+.c6{grid-column:span 6} .c7{grid-column:span 7} .c8{grid-column:span 8}
+.c9{grid-column:span 9} .c12{grid-column:span 12}
+@media (max-width:1180px){.c3,.c4,.c5{grid-column:span 6}}
+@media (max-width:820px){.card,.c3,.c4,.c5,.c6,.c7,.c8,.c9,.c12{grid-column:span 12}}
+.cardhead{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+  margin-bottom:3px}
+.card h4{font-size:13px; font-weight:600; letter-spacing:-.022em}
+.card .cap{font-size:11px; color:var(--text-3); line-height:1.5; margin:3px 0 12px}
 .card svg{display:block; width:100%; height:auto; overflow:visible}
-.cardtop{display:flex; align-items:flex-start; gap:10px; justify-content:space-between}
-.mini{font:500 10px/1 "JetBrains Mono",monospace; letter-spacing:.08em; color:var(--text-3);
-  background:var(--surface-2); border:1px solid transparent; border-radius:5px; padding:5px 8px;
-  cursor:pointer; flex:none; transition:all .12s}
-.mini:hover{color:var(--text); background:var(--surface-3)}
+.hint{font-family:"JetBrains Mono",monospace; font-size:9px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--text-3); opacity:.7}
 
-/* ---------- notices ---------- */
-.notice{background:var(--surface); border:1px solid var(--line); border-radius:12px;
-  padding:17px 19px; margin-top:12px; position:relative}
-.notice::before{content:""; position:absolute; left:19px; top:21px; width:6px; height:6px;
-  border-radius:50%; background:var(--c,var(--warn))}
-.notice h4{font-size:13.5px; font-weight:600; margin-bottom:6px; padding-left:16px; letter-spacing:-.02em}
-.notice p{margin:0; font-size:13.5px; color:var(--text-2); max-width:82ch; padding-left:16px;
-  letter-spacing:-.006em}
-.vs{display:flex; flex-wrap:wrap; gap:6px; margin-top:13px; padding-left:16px}
-.vs span{font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--text);
-  background:var(--surface-2); border-radius:6px; padding:5px 9px; font-variant-numeric:tabular-nums}
-.vs span i{color:var(--text-3); font-style:normal; font-weight:400}
+/* ================= kpi ================= */
+.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:14px}
+.kpi{background:var(--card); border:1px solid var(--line); border-radius:var(--r);
+  padding:15px 17px 13px; box-shadow:var(--shadow); position:relative; overflow:hidden}
+.kpi .kt{display:flex; align-items:center; gap:7px; margin-bottom:9px}
+.kpi .kdot{width:7px; height:7px; border-radius:2px; flex:none}
+.kpi .kl{font-size:11.5px; font-weight:500; color:var(--text-2); letter-spacing:-.008em}
+.kpi .kv{font-size:27px; font-weight:600; letter-spacing:-.042em; line-height:1.05;
+  font-variant-numeric:tabular-nums}
+.kpi .kh{font-size:10.5px; color:var(--text-3); margin-top:4px; line-height:1.45}
+.kpi .kspark{position:absolute; right:0; bottom:0; width:56%; opacity:.5; pointer-events:none}
 
-/* ---------- table ---------- */
-.tbl{width:100%; border-collapse:collapse; font-size:13px}
-.tbl th{text-align:left; font-family:"JetBrains Mono",monospace; font-size:9.5px; font-weight:500;
+/* ================= tables ================= */
+.tbl{width:100%; border-collapse:collapse; font-size:12.5px}
+.tbl th{text-align:left; font-family:"JetBrains Mono",monospace; font-size:9px; font-weight:500;
   letter-spacing:.13em; text-transform:uppercase; color:var(--text-3);
-  border-bottom:1px solid var(--line); padding:0 14px 9px 0; white-space:nowrap}
-.tbl td{padding:9px 14px 9px 0; border-bottom:1px solid var(--line-soft); vertical-align:middle;
-  letter-spacing:-.008em}
+  border-bottom:1px solid var(--line); padding:0 12px 8px 0; white-space:nowrap}
+.tbl td{padding:8px 12px 8px 0; border-bottom:1px solid var(--line-2); letter-spacing:-.008em}
 .tbl tr:last-child td{border-bottom:0}
-.tbl td.num{font-family:"JetBrains Mono",monospace; font-variant-numeric:tabular-nums;
-  text-align:right; font-size:12.5px}
-.tbl .track{height:5px; background:var(--surface-3); border-radius:3px; overflow:hidden; min-width:80px}
-.tbl .fill{height:100%; border-radius:3px}
+.tbl td.n{font-family:"JetBrains Mono",monospace; font-variant-numeric:tabular-nums;
+  text-align:right; font-size:12px}
 .scroll{overflow-x:auto}
-.pill{font-family:"JetBrains Mono",monospace; font-size:9.5px; font-weight:500; padding:3px 7px;
+.pill{font-family:"JetBrains Mono",monospace; font-size:9px; font-weight:500; padding:3px 7px;
   border-radius:5px; letter-spacing:.06em}
 .pill.ok{color:var(--ok); background:var(--ok-w)}
 .pill.warn{color:var(--warn); background:var(--warn-w)}
 .pill.no{color:var(--no); background:var(--no-w)}
 
-/* ---------- provenance drawer ---------- */
-#prov{position:fixed; right:0; bottom:0; top:0; width:min(440px,100%); z-index:60;
-  background:var(--surface); border-left:1px solid var(--line); padding:26px 26px 30px;
-  overflow-y:auto; transform:translateX(100%); transition:transform .22s cubic-bezier(.32,.72,0,1);
-  box-shadow:var(--shadow)}
-#prov.open{transform:none}
-#prov h3{font-size:19px; font-weight:600; margin-top:6px; padding-right:34px; letter-spacing:-.03em}
-#prov .close{position:absolute; top:20px; right:20px; background:var(--surface-2); border:0;
-  color:var(--text-3); font-size:16px; cursor:pointer; line-height:1; padding:7px 10px;
-  border-radius:7px; transition:all .12s}
-#prov .close:hover{color:var(--text); background:var(--surface-3)}
-#prov dl{margin:22px 0 0; display:grid; grid-template-columns:auto 1fr; gap:11px 18px; font-size:13px}
-#prov dt{font-family:"JetBrains Mono",monospace; font-size:9.5px; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--text-3); padding-top:3px}
-#prov dd{margin:0; color:var(--text); letter-spacing:-.008em}
-#prov .note{margin-top:22px; padding:14px 16px; background:var(--surface-2); border-radius:10px;
-  font-size:12.5px; color:var(--text-2); line-height:1.65; letter-spacing:-.004em}
-#scrim{position:fixed; inset:0; background:rgba(8,8,12,.42); z-index:59; opacity:0;
-  pointer-events:none; transition:opacity .22s; backdrop-filter:blur(2px)}
-#scrim.open{opacity:1; pointer-events:auto}
+/* ================= notice ================= */
+.notice{background:var(--card); border:1px solid var(--line); border-radius:var(--r);
+  padding:15px 17px; box-shadow:var(--shadow); grid-column:span 12; position:relative}
+.notice::before{content:""; position:absolute; left:17px; top:20px; width:6px; height:6px;
+  border-radius:50%; background:var(--c,var(--warn))}
+.notice h4{font-size:13px; margin-bottom:5px; padding-left:15px}
+.notice p{margin:0; font-size:12.5px; color:var(--text-2); padding-left:15px; max-width:88ch}
+.vs{display:flex; flex-wrap:wrap; gap:6px; margin-top:11px; padding-left:15px}
+.vs span{font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(--text);
+  background:var(--card-2); border-radius:6px; padding:5px 9px; font-variant-numeric:tabular-nums}
+.vs span i{color:var(--text-3); font-style:normal}
 
-.empty{background:var(--surface-2); border-radius:10px; padding:26px 18px; text-align:center;
-  color:var(--text-3); font-size:12.5px}
-footer{margin-top:56px; padding-top:24px; border-top:1px solid var(--line);
-  font-size:12px; color:var(--text-3); line-height:1.75; max-width:88ch; letter-spacing:-.004em}
-footer b{color:var(--text-2); font-weight:500}
-footer p{margin:0 0 12px}
+/* ================= misc ================= */
+.empty{background:var(--card-2); border-radius:10px; padding:22px 14px; text-align:center;
+  color:var(--text-3); font-size:12px}
+.legend{display:flex; flex-wrap:wrap; gap:4px 14px; margin-top:10px; font-size:11px;
+  color:var(--text-2)}
+.legend span{display:inline-flex; align-items:center; gap:6px}
+.legend i{width:9px; height:9px; border-radius:3px; display:inline-block}
+.seg{display:inline-flex; background:var(--card-2); border-radius:8px; padding:2px; gap:2px}
+.seg button{background:none; border:0; padding:5px 10px; border-radius:6px; font-size:11.5px;
+  font-weight:500; color:var(--text-3); letter-spacing:-.01em}
+.seg button[aria-pressed="true"]{background:var(--card); color:var(--text); box-shadow:var(--shadow)}
+.mk{cursor:pointer; transition:opacity .13s}
+.mk:hover{opacity:.82!important}
 #tip{position:fixed; pointer-events:none; opacity:0; transition:opacity .1s; background:var(--text);
-  color:var(--bg); font-family:"JetBrains Mono",monospace; font-size:11px; line-height:1.5;
-  padding:6px 9px; border-radius:6px; z-index:70; white-space:nowrap; font-variant-numeric:tabular-nums}
+  color:var(--card); font-family:"JetBrains Mono",monospace; font-size:11px; line-height:1.55;
+  padding:7px 10px; border-radius:7px; z-index:70; white-space:pre; font-variant-numeric:tabular-nums;
+  box-shadow:var(--shadow-lg)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-@media (max-width:620px){.mast{flex-direction:column; align-items:flex-start}.stamp{text-align:left}}
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .side{position:static; height:auto; flex-direction:row; align-items:center; gap:14px;
+    overflow-x:auto; padding:12px 14px}
+  .side-foot,.nav .nl{display:none}
+  .nav{flex-direction:row; gap:4px}
+  .nav button{padding:8px 11px; white-space:nowrap}
+  .body{padding:16px 16px 60px} .top{padding:12px 16px}
+}
 </style>
 
-<div class="rail">
-  <div class="rail-in" role="tablist" id="rail"></div>
-</div>
-
-<div class="wrap">
-  <header class="mast">
-    <div>
-      <div class="eyebrow">Data &amp; Insights Strategy</div>
-      <h1>Founder Forward Journey Analytics</h1>
-      <p class="sub">Every source Founder Forward holds, arranged along the founder journey.
-      Filters and tab carry into the link, so you can send someone an answer instead of a screenshot.
-      Click any number to see where it came from.</p>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="mark">FF</div>
+      <div>
+        <div class="bt">Founder Forward</div>
+        <div class="bs">Journey analytics</div>
+      </div>
     </div>
-    <div class="stamp mono">
-      <div><b id="m-src"></b> sources loaded</div>
-      <div><b id="m-rows"></b> rows &middot; <b id="m-conf"></b> conflicts</div>
-      <div>Built <b id="m-gen"></b></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <b id="sf-src"></b> sources &middot; <b id="sf-rows"></b> rows<br>
+      Built <b id="sf-gen"></b>
     </div>
-  </header>
+  </aside>
 
-  <div class="filters">
-    <span class="f-lab">Filter</span>
-    <label for="fy">Years <select id="fy"></select></label>
-    <label for="ty">to <select id="ty"></select></label>
-    <label for="fs">State <select id="fs"></select></label>
-    <label for="fe">Era <select id="fe"></select></label>
-    <input id="q" type="search" autocomplete="off" placeholder="Find a metric">
-    <span class="spacer"></span>
-    <button class="btn" id="copylink" type="button">Copy link to this view</button>
-    <button class="btn" id="reset" type="button">Reset</button>
-    <div class="scopeline" id="scope"></div>
+  <div class="main">
+    <header class="top">
+      <h1 id="pt">Overview</h1>
+      <div class="grow"></div>
+      <label class="eyebrow" for="fy" style="align-self:center">Years</label>
+      <select class="ctl" id="fy"></select>
+      <select class="ctl" id="ty"></select>
+      <button class="ctl" id="copylink" type="button">Copy link</button>
+      <button class="iconbtn" id="theme" type="button" aria-label="Toggle theme">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <div class="sub" id="ptsub"></div>
+    </header>
+
+    <div class="body">
+      <div class="chips" id="chips"></div>
+      <div id="view"></div>
+    </div>
   </div>
-
-  <main>
-    <section class="page" id="p-overview"></section>
-    <section class="page" id="p-discover" hidden></section>
-    <section class="page" id="p-apply" hidden></section>
-    <section class="page" id="p-program" hidden></section>
-    <section class="page" id="p-community" hidden></section>
-    <section class="page" id="p-alumni" hidden></section>
-  </main>
-
-  <footer>
-    <p><b>Reading these numbers.</b> Award records are not founders: 141 awards resolve to 126
-    distinct founders, because founders recur. Survival is counted once per founder from their most
-    recent participation year. Sprint capital is the Sprint programme only and is never the same
-    figure as total capital deployed.</p>
-    <p><b>Joins.</b> Email is the only key connecting any two sources. Populations are reported
-    separately rather than merged, because they overlap poorly: the census shares only 41 addresses
-    with the grants table. Any chart that looks like a join is labelled as one.</p>
-    <p><b>Privacy.</b> Aggregates and a de-identified award table only. No name, email, business
-    name, phone or address is present. Founder ids are sequential surrogates assigned at build
-    time. Demographics are aggregate and deliberately not filterable, because at cohort sizes of
-    four a race by city filter can identify a person. The capital award payment survey is excluded
-    from this product entirely by policy.</p>
-  </footer>
 </div>
-
-<div id="scrim"></div>
-<aside id="prov" role="dialog" aria-modal="false" aria-labelledby="prov-t">
-  <button class="close" id="prov-x" type="button" aria-label="Close">&times;</button>
-  <div class="eyebrow">Where this number comes from</div>
-  <h3 id="prov-t"></h3>
-  <dl id="prov-dl"></dl>
-  <div class="note" id="prov-note"></div>
-</aside>
 <div id="tip" class="mono"></div>
 <script src="data.js"></script>
 <script>
 (function(){
 var FF = window.FF, ROWS = window.FF_ROWS;
 var $ = function(id){ return document.getElementById(id); };
-if(!FF || !ROWS){ $('m-src').textContent = 'data.js failed to load'; return; }
+if(!FF || !ROWS){ document.body.innerHTML = '<p style="padding:40px">data.js failed to load.</p>'; return; }
 
-/* ============================ utilities ============================ */
-var tip = $('tip');
-function hook(el, text){
-  el.addEventListener('mousemove', function(e){
-    tip.textContent = text; tip.style.opacity = 1;
-    var x = e.clientX + 14, y = e.clientY - 12;
-    if(x + tip.offsetWidth > innerWidth - 8) x = e.clientX - tip.offsetWidth - 14;
-    tip.style.left = x + 'px'; tip.style.top = y + 'px';
-  });
-  el.addEventListener('mouseleave', function(){ tip.style.opacity = 0; });
-}
-function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){
+/* ===================== helpers ===================== */
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
   return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-function usd(n){ return '$' + Math.round(n || 0).toLocaleString('en-US'); }
-function num(n){ return (n == null ? '\u2014' : Math.round(n).toLocaleString('en-US')); }
-function uniq(rows, k){ var s = {}; rows.forEach(function(r){
-  if(r[k] != null && r[k] !== '') s[r[k]] = 1; }); return Object.keys(s).length; }
-var SVGNS = 'http://www.w3.org/2000/svg';
-function sv(tag, a){ var n = document.createElementNS(SVGNS, tag);
-  for(var k in a) n.setAttribute(k, a[k]); return n; }
+function usd(n){ n=Math.round(n||0);
+  return n>=1000000 ? '$'+(n/1000000).toFixed(2)+'M' : n>=10000 ? '$'+Math.round(n/1000)+'k'
+       : '$'+n.toLocaleString('en-US'); }
+function usdFull(n){ return '$'+Math.round(n||0).toLocaleString('en-US'); }
+function nf(n){ return (n||0).toLocaleString('en-US'); }
+var tip=$('tip');
+function tipOn(e,t){ tip.textContent=t; tip.style.opacity=1;
+  var x=e.clientX+14, y=e.clientY-10;
+  if(x+tip.offsetWidth>innerWidth-8) x=e.clientX-tip.offsetWidth-14;
+  if(y<6) y=6;
+  tip.style.left=x+'px'; tip.style.top=y+'px'; }
+function tipOff(){ tip.style.opacity=0; }
 
-/* ============================ state ============================ */
-var years = ROWS.map(function(r){ return r.y; }).filter(Boolean);
-var Y0 = Math.min.apply(null, years), Y1 = Math.max.apply(null, years);
-var STATES = Object.keys(ROWS.reduce(function(a,r){ if(r.st) a[r.st]=1; return a; },{})).sort();
-var ERAS = FF.meta.eras.map(function(e){ return e.label; });
-var SHORT = {'American Entrepreneurship Award':'AEA', 'Envolve Entrepreneurship':'Envolve',
-             'Founder Forward':'Founder Fwd'};
-var TABS = [
-  {id:'overview',  n:'',   l:'Overview'},
-  {id:'discover',  n:'01', l:'Discover'},
-  {id:'apply',     n:'02', l:'Apply'},
-  {id:'program',   n:'03', l:'Program'},
-  {id:'community', n:'04', l:'Community'},
-  {id:'alumni',    n:'05', l:'Alumni'}
-];
-var st = {tab:'overview', from:Y0, to:Y1, state:'', era:'', q:''};
+/* ===================== dimensions ===================== */
+/* label: what the UI calls it. multi: the row value is an array. */
+var DIMS = {
+  race:     {label:'Race',           multi:true,  demo:true,
+             names:{black:'Black / African American', latinx:'Latinx / Hispanic',
+                    aapi:'Asian American / Pacific Islander',
+                    indigenous:'Indigenous / Native American', multiracial:'Multiracial'}},
+  gender:   {label:'Gender',         demo:true},
+  veteran:  {label:'Veteran status', demo:true},
+  lgbtq:    {label:'LGBTQI+',        demo:true},
+  region:   {label:'Region'},
+  state:    {label:'State'},
+  city:     {label:'City'},
+  stage:    {label:'Growth stage'},
+  solution: {label:'Solution type'},
+  era:      {label:'Era'},
+  purpose:  {label:'Award programme'},
+  captype:  {label:'Capital type'},
+  alive:    {label:'Still in business'},
+  partner:  {label:'Partner', multi:true},
+  cohort:   {label:'Cohort'},
+  y:        {label:'Year'}
+};
+function dimName(d,v){
+  var D=DIMS[d]; return (D && D.names && D.names[v]) ? D.names[v] : String(v);
+}
 
-function readHash(){
-  var h = location.hash.replace(/^#/, ''); if(!h) return;
-  h.split('&').forEach(function(p){
-    var kv = p.split('='), k = kv[0], v = decodeURIComponent(kv[1] || '');
-    if(k === 'tab' && TABS.some(function(t){ return t.id === v; })) st.tab = v;
-    if(k === 'from' && +v) st.from = +v;
-    if(k === 'to'   && +v) st.to = +v;
-    if(k === 'state') st.state = v;
-    if(k === 'era')   st.era = v;
-    if(k === 'q')     st.q = v;
-  });
+/* ===================== state ===================== */
+var YEARS = ROWS.map(function(r){return r.y;}).filter(Boolean);
+var Y0=Math.min.apply(null,YEARS), Y1=Math.max.apply(null,YEARS);
+var st = {page:'overview', from:Y0, to:Y1, f:{}, xa:'city', xb:'race', measure:'founders'};
+
+function sel(d){ return st.f[d] || (st.f[d]=new Set()); }
+function toggle(d,v){
+  var s=sel(d);
+  if(s.has(v)) s.delete(v); else s.add(v);
+  if(!s.size) delete st.f[d];
+  render();
 }
-function writeHash(){
-  var p = ['tab=' + st.tab];
-  if(st.from !== Y0) p.push('from=' + st.from);
-  if(st.to   !== Y1) p.push('to=' + st.to);
-  if(st.state) p.push('state=' + encodeURIComponent(st.state));
-  if(st.era)   p.push('era=' + encodeURIComponent(st.era));
-  if(st.q)     p.push('q=' + encodeURIComponent(st.q));
-  history.replaceState(null, '', '#' + p.join('&'));
-}
-function rows(){
+function activeDims(){ return Object.keys(st.f).filter(function(d){ return st.f[d].size; }); }
+
+/* ---- the crossfilter core.
+   A chart on dimension D must ignore D's own selection, otherwise selecting a
+   value collapses that chart to one bar and there is no way back. ---- */
+function apply(exceptDim){
+  var dims = activeDims();
   return ROWS.filter(function(r){
     if(r.y != null && (r.y < st.from || r.y > st.to)) return false;
-    if(st.state && r.st !== st.state) return false;
-    if(st.era && r.era !== st.era) return false;
+    for(var i=0;i<dims.length;i++){
+      var d=dims[i]; if(d===exceptDim) continue;
+      var s=st.f[d], v=r[d];
+      if(Array.isArray(v)){
+        var hit=false; for(var j=0;j<v.length;j++) if(s.has(v[j])){ hit=true; break; }
+        if(!hit) return false;
+      } else if(!s.has(v)) return false;
+    }
     return true;
   });
 }
-function inRange(y){ return y == null || (y >= st.from && y <= st.to); }
-var filtersActive = function(){ return st.from !== Y0 || st.to !== Y1 || !!st.state || !!st.era; };
-
-/* ============================ provenance ============================ */
-function openProv(key, title){
-  var p = FF.provenance[key];
-  $('prov-t').textContent = title || key;
-  var conf = FF.conflicts.filter(function(c){
-    return c.metric.toLowerCase().indexOf((title||'').toLowerCase().split(' ')[0]) !== -1; });
-  var dl = [];
-  if(p){
-    dl.push(['Source', esc(p.source)]);
-    if(p.file)  dl.push(['File', '<span class="mono">' + esc(p.file) + '</span>']);
-    if(p.field) dl.push(['Field', '<span class="mono">' + esc(p.field) + '</span>']);
-    dl.push(['Value', '<span class="mono">' + esc(p.value) + '</span>']);
-    if(p.denom != null) dl.push(['Denominator', '<span class="mono">' + esc(p.denom) + '</span>']);
-    dl.push(['Built', '<span class="mono">' + esc(p.asof) + '</span>']);
-  } else {
-    dl.push(['Source', 'Derived in the browser from the filtered award table.']);
-    dl.push(['Base file', '<span class="mono">2016 to 2024-Grid view.csv</span>']);
-  }
-  if(filtersActive()) dl.push(['Filters', esc(scopeText())]);
-  $('prov-dl').innerHTML = dl.map(function(d){
-    return '<dt>' + d[0] + '</dt><dd>' + d[1] + '</dd>'; }).join('');
-  var note = (p && p.note) || '';
-  if(conf.length) note += (note ? '<br><br>' : '') + '<b>Conflicting source.</b> ' + esc(conf[0].why);
-  $('prov-note').innerHTML = note || 'No caveats recorded for this figure.';
-  $('prov-note').style.display = 'block';
-  $('prov').classList.add('open'); $('scrim').classList.add('open');
-}
-function closeProv(){ $('prov').classList.remove('open'); $('scrim').classList.remove('open'); }
-$('prov-x').onclick = closeProv; $('scrim').onclick = closeProv;
-addEventListener('keydown', function(e){ if(e.key === 'Escape') closeProv(); });
-
-/* ============================ builders ============================ */
-function tile(o){
-  var flagged = FF.conflicts.some(function(c){
-    return o.conflict && c.metric.toLowerCase().indexOf(o.conflict) !== -1; });
-  return '<button class="tile' + (flagged ? ' flag' : '') + '" data-prov="' + esc(o.prov || '') +
-    '" data-title="' + esc(o.label) + '">' +
-    '<span class="src">' + (flagged ? '\u26A0 2 SOURCES' : (o.src || 'SOURCE')) + '</span>' +
-    '<span class="n" style="color:' + (o.color || 'var(--text)') + '">' + o.value + '</span>' +
-    '<span class="l">' + esc(o.label) + '</span>' +
-    (o.hint ? '<span class="h">' + o.hint + '</span>' : '') + '</button>';
-}
-function tiles(list){
-  // Choose a column count the tiles actually fill, so no row ends in dead space.
-  var n = list.length, cols = n % 4 === 0 ? 4 : (n % 3 === 0 ? 3 : (n % 2 === 0 ? 2 : 4));
-  return '<div class="tiles" style="--cols:' + cols + '">' + list.join('') + '</div>';
-}
-function sec(title, why, body){
-  return '<section class="sec"><div class="sechead"><h3>' + esc(title) + '</h3>' +
-    (why ? '<span class="why">' + why + '</span>' : '') + '</div>' + body + '</section>';
-}
-function card(title, cap, inner, wide, exportId){
-  return '<div class="card' + (wide ? ' wide' : '') + '">' +
-    '<div class="cardtop"><div><h4>' + esc(title) + '</h4></div>' +
-    (exportId ? '<button class="mini" data-export="' + esc(exportId) + '">CSV</button>' : '') +
-    '</div>' + (cap ? '<p class="cap">' + cap + '</p>' : '') + inner + '</div>';
-}
-function notice(kind, title, body, vs){
-  return '<div class="notice" style="--c:var(--' + kind + ')"><h4>' + esc(title) + '</h4>' +
-    '<p>' + body + '</p>' + (vs ? '<div class="vs">' + vs + '</div>' : '') + '</div>';
+function founders(rs){ var s={}; rs.forEach(function(r){ s[r.f]=1; }); return Object.keys(s).length; }
+function capital(rs){ return rs.reduce(function(a,r){ return a+r.amt; },0); }
+/* Two founders carry conflicting "still in business" values across awards, so a
+   founder counts once, on the verdict from their most recent participation. */
+function surviving(rs){
+  var latest={};
+  rs.slice().sort(function(a,b){ return (a.y||0)-(b.y||0); }).forEach(function(r){
+    latest[r.f]=r.alive; });
+  var keys=Object.keys(latest), yes=0;
+  keys.forEach(function(k){ if(latest[k]==='Yes') yes++; });
+  return {yes:yes, total:keys.length};
 }
 
-/* ---- horizontal bars ---- */
-function hbar(list, color, opt){
-  opt = opt || {};
-  if(!list || !list.length) return '<div class="empty">Nothing in this range.</div>';
-  var W = 340, rh = 25, PADL = opt.padl || 130, PADR = opt.padr || 54;
-  var uid = 'b' + (hbar.i = (hbar.i || 0) + 1);
-  var max = Math.max.apply(null, list.map(function(r){ return r.n; })) || 1;
-  var inner = W - PADL - PADR, out = [];
-  out.push('<svg viewBox="0 0 ' + W + ' ' + (list.length * rh) + '" role="img" aria-label="' +
-    esc(opt.label || '') + '"><defs><pattern id="' + uid + '" width="6" height="6" ' +
-    'patternUnits="userSpaceOnUse" patternTransform="rotate(45)">' +
-    '<rect width="6" height="6" fill="var(--surface-2)"/>' +
-    '<line x1="0" y1="0" x2="0" y2="6" stroke="var(--hatch)" stroke-width="2.5"/></pattern></defs>');
-  list.forEach(function(r, i){
-    var y = i * rh, absent = /not recorded|not set|blank/i.test(r.label);
-    var fit = Math.max(8, Math.floor((PADL - 12) / 6.1));
-    var lab = r.label.length > fit ? r.label.slice(0, fit - 1) + '\u2026' : r.label;
-    var w = Math.max(2, (r.n / max) * inner);
-    out.push('<text x="' + (PADL - 9) + '" y="' + (y + rh/2 + 3.5) + '" text-anchor="end" ' +
-      'font-size="11" fill="' + (absent ? 'var(--text-3)' : 'var(--text-2)') + '">' + esc(lab) + '</text>');
-    out.push('<rect x="' + PADL + '" y="' + (y + 4.5) + '" width="' + w + '" height="' + (rh - 11) +
-      '" rx="3" fill="' + (absent ? 'url(#' + uid + ')' : color) + '"><title>' +
-      esc(r.label + ' \u2014 ' + r.n + (opt.unit || '')) + '</title></rect>');
-    out.push('<text x="' + (PADL + w + 7) + '" y="' + (y + rh/2 + 3.5) + '" font-size="11" ' +
-      'fill="var(--text-2)" font-family="JetBrains Mono, monospace">' + r.n +
-      (opt.pct ? '  ' + Math.round(100 * r.n / opt.pct) + '%' : '') + '</text>');
-  });
-  return out.join('') + '</svg>';
-}
-
-/* ---- single-measure year series ---- */
-function series(points, color, opt){
-  opt = opt || {};
-  var pts = points.filter(function(p){ return inRange(p.year); });
-  var have = pts.filter(function(p){ return p.v != null; });
-  if(!have.length) return '<div class="empty">No values recorded in this range.</div>';
-  var W = 340, H = opt.h || 96, PADL = 40, PADR = 8, PADB = 20;
-  var inner = W - PADL - PADR, step = inner / pts.length;
-  var bw = Math.min(30, step * 0.6);
-  var max = Math.max.apply(null, have.map(function(p){ return p.v; })) || 1;
-  var top = Math.pow(10, String(Math.round(max)).length - 1);
-  top = Math.ceil(max / top) * top;
-  var out = ['<svg viewBox="0 -8 ' + W + ' ' + (H + PADB + 12) + '" role="img" aria-label="' +
-    esc(opt.label || '') + '">'];
-  [0, 0.5, 1].forEach(function(k){
-    var y = H - k * H;
-    out.push('<line x1="' + PADL + '" x2="' + (W - PADR) + '" y1="' + y + '" y2="' + y +
-      '" stroke="var(--line-soft)" stroke-width="1"/>');
-    out.push('<text x="' + (PADL - 7) + '" y="' + (y + 3.5) + '" text-anchor="end" font-size="9.5" ' +
-      'fill="var(--text-3)" font-family="JetBrains Mono, monospace">' +
-      (opt.money ? (top * k >= 1000 ? '$' + Math.round(top * k / 1000) + 'k' : '$' + Math.round(top * k))
-                 : Math.round(top * k)) + '</text>');
-  });
-  pts.forEach(function(p, i){
-    var cx = PADL + step * i + step / 2;
-    if(p.v != null){
-      var h = Math.max(2, (p.v / top) * H);
-      out.push('<rect x="' + (cx - bw/2) + '" y="' + (H - h) + '" width="' + bw + '" height="' + h +
-        '" rx="2.5" fill="' + color + '"><title>' + p.year + ' \u2014 ' +
-        (opt.money ? usd(p.v) : p.v) + '</title></rect>');
-    } else {
-      out.push('<rect x="' + (cx - bw/2) + '" y="' + (H - 3) + '" width="' + bw + '" height="3" ' +
-        'rx="1.5" fill="var(--hatch)"><title>' + p.year + ' \u2014 not recorded</title></rect>');
-    }
-    out.push('<text x="' + cx + '" y="' + (H + 14) + '" text-anchor="middle" font-size="9.5" ' +
-      'fill="var(--text-3)" font-family="JetBrains Mono, monospace">\u2019' +
-      String(p.year).slice(2) + '</text>');
-  });
-  return out.join('') + '</svg>';
-}
-
-/* ---- capital + founders, shared timeline with era band ---- */
-function timeline(rs){
-  var agg = {};
+/* Group rows by a dimension, counting distinct founders. */
+function group(dim, rs, opts){
+  opts=opts||{};
+  var multi=DIMS[dim]&&DIMS[dim].multi, m={};
   rs.forEach(function(r){
-    if(r.y == null) return;
-    if(!agg[r.y]) agg[r.y] = {y:r.y, cap:0, f:{}, era:r.era};
-    agg[r.y].cap += r.amt; agg[r.y].f[r.f] = 1;
+    var v=r[dim];
+    var list = multi ? v : (v===''||v==null ? [] : [v]);
+    if(!list || !list.length){ if(opts.blank){ (m[opts.blank]=m[opts.blank]||{})[r.f]=1; } return; }
+    list.forEach(function(x){ (m[x]=m[x]||{})[r.f]=1; });
   });
-  var ys = Object.keys(agg).map(Number).sort(function(a,b){ return a-b; })
-    .map(function(y){ return {y:y, cap:agg[y].cap, n:Object.keys(agg[y].f).length, era:agg[y].era}; });
-  if(!ys.length) return '<div class="empty">No awards in this range.</div>';
-  var W = 720, PADL = 54, PADR = 16, H1 = 108, GAP = 26, H2 = 68, BAND = 30;
-  var inner = W - PADL - PADR, step = inner / ys.length, bw = Math.min(32, step * 0.58);
-  var nice = function(v){ if(v <= 0) return 1;
-    var p = Math.pow(10, String(Math.round(v)).length - 1); return Math.ceil(v / p) * p; };
-  var tc = nice(Math.max.apply(null, ys.map(function(r){ return r.cap; })));
-  var tf = Math.max(5, Math.ceil(Math.max.apply(null, ys.map(function(r){ return r.n; })) / 5) * 5);
-  var out = ['<svg viewBox="0 -18 ' + W + ' ' + (H1+GAP+H2+BAND+38) + '" role="img" ' +
-    'aria-label="Capital deployed and founders funded by year">'];
-  function axis(y0, h, top, money){
-    [0, 0.5, 1].forEach(function(k){
-      var y = y0 + h - k * h;
-      out.push('<line x1="' + PADL + '" x2="' + (W-PADR) + '" y1="' + y + '" y2="' + y +
-        '" stroke="var(--line-soft)" stroke-width="1"/>');
-      out.push('<text x="' + (PADL-8) + '" y="' + (y+3.5) + '" text-anchor="end" font-size="10" ' +
-        'fill="var(--text-3)" font-family="JetBrains Mono, monospace">' +
-        (money ? (top*k >= 1000 ? '$' + Math.round(top*k/1000) + 'k' : '$' + Math.round(top*k))
-               : Math.round(top*k)) + '</text>');
+  var out=Object.keys(m).map(function(k){
+    return {v:k, label:dimName(dim,k), n:Object.keys(m[k]).length}; });
+  out.sort(function(a,b){ return b.n-a.n || String(a.label).localeCompare(b.label); });
+  return opts.top ? out.slice(0,opts.top) : out;
+}
+
+/* ===================== svg helpers ===================== */
+var UID=0;
+function svgOpen(w,h,label){
+  return '<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+esc(label||'')+'">';
+}
+function isSel(d,v){ var s=st.f[d]; return !!(s&&s.has(v)); }
+function dimHasSel(d){ var s=st.f[d]; return !!(s&&s.size); }
+function markOpacity(d,v){ return !dimHasSel(d) ? 1 : (isSel(d,v) ? 1 : .34); }
+var SERIES=['var(--s1)','var(--s2)','var(--s3)','var(--s4)','var(--s5)'];
+
+/* ---- clickable horizontal bars ---- */
+function bars(dim, rs, opts){
+  opts=opts||{};
+  var data=group(dim, rs, {top:opts.top, blank:opts.blank});
+  if(!data.length) return '<div class="empty">Nothing matches the current filters.</div>';
+  var total=opts.pctOf!=null ? opts.pctOf : founders(rs);
+  var W=340, rh=opts.rh||26, PADL=opts.padl||124, PADR=58;
+  var max=Math.max.apply(null,data.map(function(r){return r.n;}))||1;
+  var inner=W-PADL-PADR, o=[svgOpen(W, data.length*rh, DIMS[dim].label)];
+  data.forEach(function(r,i){
+    var y=i*rh, w=Math.max(3,(r.n/max)*inner), op=markOpacity(dim,r.v);
+    var fit=Math.max(8,Math.floor((PADL-10)/6.0));
+    var lab=r.label.length>fit ? r.label.slice(0,fit-1)+'\u2026' : r.label;
+    var pct = total>=1 ? Math.round(100*r.n/total) : 0;
+    var show = r.n>=5 ? pct+'%' : 'n<5';
+    o.push('<text x="'+(PADL-9)+'" y="'+(y+rh/2+3.5)+'" text-anchor="end" font-size="11" '+
+      'fill="var(--text-2)" opacity="'+op+'">'+esc(lab)+'</text>');
+    o.push('<rect class="mk" data-d="'+dim+'" data-v="'+esc(r.v)+'" data-t="'+
+      esc(r.label+'\n'+r.n+(r.n===1?' founder  ':' founders  ')+show)+'" x="'+PADL+'" y="'+(y+5)+'" width="'+w+
+      '" height="'+(rh-12)+'" rx="'+((rh-12)/2)+'" fill="'+(opts.color||'var(--s1)')+
+      '" opacity="'+op+'"/>');
+    o.push('<text x="'+(PADL+w+8)+'" y="'+(y+rh/2+3.5)+'" font-size="10.5" fill="var(--text-2)" '+
+      'font-family="JetBrains Mono, monospace" opacity="'+op+'">'+r.n+
+      '<tspan fill="var(--text-3)">  '+show+'</tspan></text>');
+  });
+  return o.join('')+'</svg>';
+}
+
+/* ---- clickable donut with centred total ---- */
+function donut(dim, rs, opts){
+  opts=opts||{};
+  var data=group(dim, rs, {top:5});
+  var tot=data.reduce(function(a,r){return a+r.n;},0);
+  if(!tot) return '<div class="empty">Nothing matches the current filters.</div>';
+  var S=190, cx=S/2, cy=S/2, rO=S/2-6, rI=rO-26, a=-Math.PI/2;
+  var o=[svgOpen(S,S,DIMS[dim].label)];
+  data.forEach(function(r,i){
+    var frac=r.n/tot, a2=a+frac*Math.PI*2, big=frac>.5?1:0;
+    var x1=cx+rO*Math.cos(a), y1=cy+rO*Math.sin(a), x2=cx+rO*Math.cos(a2), y2=cy+rO*Math.sin(a2);
+    var x3=cx+rI*Math.cos(a2), y3=cy+rI*Math.sin(a2), x4=cx+rI*Math.cos(a), y4=cy+rI*Math.sin(a);
+    var d='M'+x1+' '+y1+'A'+rO+' '+rO+' 0 '+big+' 1 '+x2+' '+y2+'L'+x3+' '+y3+
+          'A'+rI+' '+rI+' 0 '+big+' 0 '+x4+' '+y4+'Z';
+    o.push('<path class="mk" data-d="'+dim+'" data-v="'+esc(r.v)+'" data-t="'+
+      esc(r.label+'\n'+r.n+(r.n===1?' founder':' founders'))+
+      '" d="'+d+'" fill="'+SERIES[i%5]+'" opacity="'+markOpacity(dim,r.v)+
+      '" stroke="var(--card)" stroke-width="2"/>');
+    a=a2;
+  });
+  o.push('<text x="'+cx+'" y="'+(cy-2)+'" text-anchor="middle" font-size="26" font-weight="600" '+
+    'fill="var(--text)" letter-spacing="-1">'+founders(rs)+'</text>');
+  o.push('<text x="'+cx+'" y="'+(cy+15)+'" text-anchor="middle" font-size="10" '+
+    'fill="var(--text-3)" font-family="JetBrains Mono, monospace">FOUNDERS</text>');
+  var leg=data.map(function(r,i){
+    return '<span><i style="background:'+SERIES[i%5]+'"></i>'+esc(r.label)+
+      ' <b class="mono" style="font-weight:500">'+r.n+'</b></span>'; }).join('');
+  return o.join('')+'</svg><div class="legend">'+leg+'</div>';
+}
+
+/* ---- gradient area over years, click a year to filter ---- */
+function area(rs, opts){
+  opts=opts||{};
+  var m={};
+  for(var y=st.from;y<=st.to;y++) m[y]={y:y, cap:0, f:{}};
+  rs.forEach(function(r){ if(m[r.y]){ m[r.y].cap+=r.amt; m[r.y].f[r.f]=1; } });
+  var pts=Object.keys(m).map(Number).sort(function(a,b){return a-b;}).map(function(y){
+    return {y:y, v:opts.measure==='capital'?m[y].cap:Object.keys(m[y].f).length}; });
+  if(pts.length<2) return '<div class="empty">Need at least two years in range.</div>';
+  var W=700,H=180,PADL=46,PADR=14,PADB=26;
+  var max=Math.max.apply(null,pts.map(function(p){return p.v;}))||1;
+  var top=Math.pow(10,String(Math.round(max)).length-1); top=Math.ceil(max/top)*top||1;
+  var iw=W-PADL-PADR, ih=H-PADB, step=iw/(pts.length-1);
+  var X=function(i){ return PADL+i*step; }, Y=function(v){ return ih-(v/top)*ih; };
+  var uid='g'+(++UID), o=[svgOpen(W,H,'Trend by year')];
+  o.push('<defs><linearGradient id="'+uid+'" x1="0" y1="0" x2="0" y2="1">'+
+    '<stop offset="0%" stop-color="var(--s1)" stop-opacity=".34"/>'+
+    '<stop offset="100%" stop-color="var(--s1)" stop-opacity="0"/></linearGradient></defs>');
+  [0,.5,1].forEach(function(k){
+    var yy=ih-k*ih;
+    o.push('<line x1="'+PADL+'" x2="'+(W-PADR)+'" y1="'+yy+'" y2="'+yy+
+      '" stroke="var(--line)" stroke-width="1"/>');
+    o.push('<text x="'+(PADL-8)+'" y="'+(yy+3.5)+'" text-anchor="end" font-size="9.5" '+
+      'fill="var(--text-3)" font-family="JetBrains Mono, monospace">'+
+      (opts.measure==='capital'?usd(top*k):Math.round(top*k))+'</text>');
+  });
+  var line=pts.map(function(p,i){ return (i?'L':'M')+X(i)+' '+Y(p.v); }).join('');
+  o.push('<path d="'+line+'L'+X(pts.length-1)+' '+ih+'L'+PADL+' '+ih+'Z" fill="url(#'+uid+')"/>');
+  o.push('<path d="'+line+'" fill="none" stroke="var(--s1)" stroke-width="2" '+
+    'stroke-linejoin="round" stroke-linecap="round"/>');
+  pts.forEach(function(p,i){
+    var op=markOpacity('y',p.y);
+    o.push('<circle class="mk" data-d="y" data-v="'+p.y+'" data-t="'+
+      esc(p.y+'\n'+(opts.measure==='capital'?usdFull(p.v):p.v+' founders'))+
+      '" cx="'+X(i)+'" cy="'+Y(p.v)+'" r="4.5" fill="var(--card)" stroke="var(--s1)" '+
+      'stroke-width="2" opacity="'+op+'"/>');
+    o.push('<text x="'+X(i)+'" y="'+(ih+16)+'" text-anchor="middle" font-size="9.5" '+
+      'fill="var(--text-3)" font-family="JetBrains Mono, monospace" opacity="'+op+'">\u2019'+
+      String(p.y).slice(2)+'</text>');
+  });
+  return o.join('')+'</svg>';
+}
+
+/* ---- ring gauge ---- */
+function ring(part, total, label, color){
+  var S=160, cx=S/2, cy=S/2, r=S/2-14, C=2*Math.PI*r;
+  var frac=total?part/total:0;
+  return svgOpen(S,S,label)+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="var(--card-3)" stroke-width="13"/>'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="13" '+
+      'stroke-linecap="round" stroke-dasharray="'+(C*frac)+' '+C+'" '+
+      'transform="rotate(-90 '+cx+' '+cy+')"/>'+
+    '<text x="'+cx+'" y="'+(cy+1)+'" text-anchor="middle" font-size="25" font-weight="600" '+
+      'fill="var(--text)" letter-spacing="-1">'+(total?(100*frac).toFixed(1):'0')+'%</text>'+
+    '<text x="'+cx+'" y="'+(cy+18)+'" text-anchor="middle" font-size="9.5" fill="var(--text-3)" '+
+      'font-family="JetBrains Mono, monospace">'+esc(label)+'</text></svg>';
+}
+
+/* ---- cross-tab matrix: click a cell to filter both dimensions ---- */
+var SEP = '|~|';
+function matrix(dimA, dimB, rs){
+  var A=group(dimA, rs, {top:12}), B=group(dimB, rs, {top:8});
+  if(!A.length||!B.length) return '<div class="empty">Nothing matches the current filters.</div>';
+  var multiA=DIMS[dimA].multi, multiB=DIMS[dimB].multi;
+  var cell={};
+  rs.forEach(function(r){
+    var av = multiA ? r[dimA] : (r[dimA]===''?[]:[r[dimA]]);
+    var bv = multiB ? r[dimB] : (r[dimB]===''?[]:[r[dimB]]);
+    av.forEach(function(a){ bv.forEach(function(b){
+      var k=a+SEP+b; (cell[k]=cell[k]||{})[r.f]=1; }); });
+  });
+  var get=function(a,b){ var c=cell[a+SEP+b]; return c?Object.keys(c).length:0; };
+  var max=0; A.forEach(function(a){ B.forEach(function(b){ max=Math.max(max,get(a.v,b.v)); }); });
+  var head='<th></th>'+B.map(function(b){
+    return '<th style="text-align:center;font-size:8.5px;max-width:78px;white-space:normal">'+
+      esc(b.label)+'</th>'; }).join('')+'<th class="n">All</th>';
+  var body=A.map(function(a){
+    return '<tr><td style="font-size:11.5px;white-space:nowrap;max-width:150px;overflow:hidden;'+
+      'text-overflow:ellipsis">'+esc(a.label)+'</td>'+
+      B.map(function(b){
+        var n=get(a.v,b.v), t=max?n/max:0;
+        return '<td style="text-align:center;padding:3px 4px">'+
+          '<div class="mk" data-d2="'+dimA+SEP+dimB+'" data-v2="'+esc(a.v)+SEP+esc(b.v)+
+          '" data-t="'+esc(a.label+' x '+b.label+'\n'+n+(n===1?' founder':' founders'))+
+          '" style="border-radius:7px;padding:7px 0;font-family:JetBrains Mono,monospace;'+
+          'font-size:11px;font-variant-numeric:tabular-nums;background:color-mix(in srgb,'+
+          'var(--s1) '+Math.round(t*78)+'%, var(--card-2));color:'+
+          (t>.5?'#fff':'var(--text-2)')+'">'+(n||'.')+'</div></td>';
+      }).join('')+'<td class="n" style="color:var(--text-3)">'+a.n+'</td></tr>';
+  }).join('');
+  return '<div class="scroll"><table class="tbl"><thead><tr>'+head+'</tr></thead><tbody>'+
+    body+'</tbody></table></div>';
+}
+
+/* ---- kpi ---- */
+function kpi(o){
+  var spark='';
+  if(o.spark && o.spark.length>1){
+    var W=120,H=34,mx=Math.max.apply(null,o.spark)||1;
+    var pts=o.spark.map(function(v,i){
+      return (i?'L':'M')+(i*(W/(o.spark.length-1)))+' '+(H-(v/mx)*(H-4)-2); }).join('');
+    spark='<svg class="kspark" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">'+
+      '<path d="'+pts+'L'+W+' '+H+'L0 '+H+'Z" fill="'+(o.color||'var(--s1)')+'" opacity=".12"/>'+
+      '<path d="'+pts+'" fill="none" stroke="'+(o.color||'var(--s1)')+'" stroke-width="1.6"/></svg>';
+  }
+  return '<div class="kpi">'+spark+'<div class="kt"><span class="kdot" style="background:'+
+    (o.color||'var(--s1)')+'"></span><span class="kl">'+esc(o.label)+'</span></div>'+
+    '<div class="kv" style="color:'+(o.vc||'var(--text)')+'">'+o.value+'</div>'+
+    (o.hint?'<div class="kh">'+o.hint+'</div>':'')+'</div>';
+}
+function card(o){
+  return '<div class="card '+(o.span||'c6')+'"><div class="cardhead"><div><h4>'+esc(o.title)+
+    '</h4></div>'+(o.right||'')+'</div>'+(o.cap?'<p class="cap">'+o.cap+'</p>':'')+o.body+'</div>';
+}
+function notice(kind,title,body,vs){
+  return '<div class="notice" style="--c:var(--'+kind+')"><h4>'+esc(title)+'</h4><p>'+body+'</p>'+
+    (vs?'<div class="vs">'+vs+'</div>':'')+'</div>';
+}
+
+/* ===================== pages ===================== */
+var DEMO_NOTE = 'Demographics exist for the ' + FF.demographics.denominator +
+  ' founders whose award links to a founder profile, not all ' + FF.grants.founders +
+  '. Founders may select more than one race, so shares do not sum to 100.';
+
+var PAGES = {
+
+overview: function(){
+  var rs=apply(), f=founders(rs), cap=capital(rs);
+  var spark=[]; for(var y=st.from;y<=st.to;y++){
+    spark.push(capital(rs.filter(function(r){return r.y===y;}))); }
+  var sv=surviving(rs), alive=sv.yes;
+  var adv=FF.impact_series.filter(function(s){return s.key==='Advising Sessions Facilitated';})[0];
+  var advN=adv.points.filter(function(p){return p.v!=null&&p.year>=st.from&&p.year<=st.to;})
+    .reduce(function(a,p){return a+p.v;},0);
+
+  return '<div class="kpis">'+
+    kpi({label:'Capital deployed', value:usdFull(cap), color:'var(--s1)', spark:spark,
+         hint:rs.length+' awards to '+f+' founders'})+
+    kpi({label:'Founders funded', value:nf(f), color:'var(--s2)',
+         hint:'Distinct people, deduplicated'})+
+    kpi({label:'Median award', value:usdFull(rs.length?
+         rs.map(function(r){return r.amt;}).sort(function(a,b){return a-b;})[Math.floor(rs.length/2)]:0),
+         color:'var(--s3)', hint:'Across the current selection'})+
+    kpi({label:'Still in business', value:sv.total?(100*alive/sv.total).toFixed(1)+'%':'0%',
+         color:'var(--warn)', vc:'var(--warn)',
+         hint:alive+' of '+sv.total+'. Last checked July 2024.'})+
+    kpi({label:'Advising sessions', value:nf(advN), color:'var(--s4)',
+         hint:'179 in 2021, falling to 10 in 2025'})+
+    '</div><div class="grid">'+
+    card({span:'c8', title:'Capital deployed by year',
+      cap:'Click a point to filter every chart on this page to that year.',
+      right:'<div class="seg"><button data-m="capital" aria-pressed="'+(st.measure==='capital')+
+        '">Capital</button><button data-m="founders" aria-pressed="'+(st.measure==='founders')+
+        '">Founders</button></div>',
+      body:area(apply('y'), {measure:st.measure})})+
+    card({span:'c4', title:'Solution type', cap:'Click a segment to filter.',
+      body:donut('solution', apply('solution'))})+
+    card({span:'c4', title:'Race', cap:DEMO_NOTE,
+      body:bars('race', apply('race'), {color:'var(--s4)', padl:150})})+
+    card({span:'c4', title:'Growth stage', cap:'Click a bar to filter.',
+      body:bars('stage', apply('stage'), {blank:'Not recorded', color:'var(--s2)', padl:104})})+
+    card({span:'c4', title:'Region', cap:'Click a bar to filter.',
+      body:bars('region', apply('region'), {color:'var(--s3)', padl:140})})+
+    FF.conflicts.map(function(c){
+      return notice('warn', c.metric, esc(c.why), c.values.map(function(v){
+        return '<span><i>'+esc(v.source)+'</i> '+(typeof v.value==='number'?
+          (v.value>1000?usdFull(v.value):v.value):'-')+'</span>'; }).join('')); }).join('')+
+    notice('no','Thirty three funded founders can never be joined to anything',
+      'The grants table holds <b>'+FF.grants.founders+'</b> founders but only <b>'+
+      FF.founders.by_population.funded+'</b> carry an email address. Email is the only key '+
+      'between any two sources, so the remaining <b>'+FF.founders.unresolvable.funded+
+      '</b> can never be matched to a survey, the census or the directory.')+
+    '</div>';
+},
+
+explore: function(){
+  var rs=apply(), opts=function(cur){ return Object.keys(DIMS).map(function(d){
+    return '<option value="'+d+'"'+(d===cur?' selected':'')+'>'+esc(DIMS[d].label)+'</option>';
+  }).join(''); };
+  return '<div class="kpis">'+
+    kpi({label:'Founders in selection', value:nf(founders(rs)), color:'var(--s1)',
+         hint:'of '+FF.grants.founders+' funded'})+
+    kpi({label:'Awards', value:nf(rs.length), color:'var(--s2)',
+         hint:'of '+FF.grants.records+' records'})+
+    kpi({label:'Capital', value:usdFull(capital(rs)), color:'var(--s3)',
+         hint:'in the current selection'})+
+    kpi({label:'Share of all founders', value:(100*founders(rs)/FF.grants.founders).toFixed(0)+'%',
+         color:'var(--s4)', hint:'Denominator is every funded founder'})+
+    '</div><div class="grid">'+
+    card({span:'c12', title:'Cross-tab any two dimensions',
+      cap:'Distinct founders at each intersection. Click a cell to filter both dimensions at once. '+
+          'Shading is relative to the largest cell in view.',
+      right:'<div style="display:flex;gap:6px"><select class="ctl" id="xa">'+opts(st.xa)+
+        '</select><select class="ctl" id="xb">'+opts(st.xb)+'</select></div>',
+      body:matrix(st.xa, st.xb, rs)})+
+    card({span:'c6', title:DIMS[st.xa].label, cap:'Click to filter.',
+      body:bars(st.xa, apply(st.xa), {top:12, blank:'Not recorded', padl:140})})+
+    card({span:'c6', title:DIMS[st.xb].label, cap:'Click to filter.',
+      body:bars(st.xb, apply(st.xb), {top:12, blank:'Not recorded', color:'var(--s2)', padl:140})})+
+    '</div>';
+},
+
+discover: function(){
+  var c=FF.census;
+  return '<div class="kpis">'+
+    kpi({label:'Census records', value:nf(c.n), color:'var(--s1)',
+         hint:'100% email, 100% growth stage'})+
+    kpi({label:'Distinct census emails', value:nf(FF.founders.by_population.census),
+         color:'var(--s2)', hint:'Only '+FF.founders.overlaps.census_funded+' match a funded founder'})+
+    kpi({label:'Founders known', value:nf(FF.founders.universe), color:'var(--s3)',
+         hint:'Across grants, census, directory and interest forms'})+
+    kpi({label:'AI Civic Studio', value:nf(FF.discover.acs_interest+FF.discover.acs_application),
+         color:'var(--s4)', hint:'New programme, 2026'})+
+    '</div><div class="grid">'+
+    card({span:'c6', title:'Census growth stage',
+      cap:'From the census, which is a different and larger population than the grants table.',
+      body:bars('stage', apply('stage'), {blank:'Not recorded', padl:104})})+
+    card({span:'c6', title:'Census solution type', cap:'',
+      body:bars('solution', apply('solution'), {blank:'Not recorded', color:'var(--s2)', padl:104})})+
+    card({span:'c12', title:'Census field coverage',
+      cap:'Where the census is strong and where it stops.',
+      body:'<div class="scroll"><table class="tbl"><thead><tr><th>Field</th><th>Coverage</th>'+
+        '<th class="n">Filled</th></tr></thead><tbody>'+c.coverage.map(function(r){
+          var col=r.pct>=95?'var(--ok)':r.pct>=60?'var(--warn)':'var(--no)';
+          return '<tr><td>'+esc(r.label)+'</td><td><div style="height:5px;background:var(--card-3);'+
+            'border-radius:3px;min-width:100px"><div style="height:100%;border-radius:3px;width:'+
+            r.pct+'%;background:'+col+'"></div></div></td><td class="n">'+r.filled+'/'+r.total+
+            '</td></tr>'; }).join('')+'</tbody></table></div>'})+
+    '</div>';
+},
+
+apply_: function(){
+  var f=FF.census.funnel, v=function(k){
+    var x=f.filter(function(r){return r.label===k;})[0]; return x?x.n:0; };
+  var scored=f.filter(function(r){return r.label!=='(not set)';})
+              .reduce(function(a,r){return a+r.n;},0);
+  return '<div class="kpis">'+
+    kpi({label:'In the census', value:nf(FF.census.n), color:'var(--s1)', hint:'The pool considered'})+
+    kpi({label:'Given a status', value:nf(scored), color:'var(--s2)',
+         hint:(FF.census.n-scored)+' were never triaged'})+
+    kpi({label:'Completed', value:nf(v('Completed')), color:'var(--ok)', vc:'var(--ok)',
+         hint:'Reached the end of a cohort'})+
+    kpi({label:'Not eligible', value:nf(v('Not Eligible')), color:'var(--no)', vc:'var(--no)',
+         hint:'No reason is recorded anywhere'})+
+    '</div><div class="grid">'+
+    card({span:'c6', title:'Selection funnel',
+      cap:'Built from the census Cohort Status field, because no other selection record survives.',
+      body:(function(){
+        var steps=[{l:'In the census',n:FF.census.n,c:'var(--s1)'},
+                   {l:'Pending',n:v('Pending'),c:'var(--s3)'},
+                   {l:'Completed',n:v('Completed'),c:'var(--s2)'},
+                   {l:'Not eligible',n:v('Not Eligible'),c:'var(--s4)'},
+                   {l:'Never triaged',n:v('(not set)'),c:'var(--s5)'}];
+        var mx=Math.max.apply(null,steps.map(function(s){return s.n;}))||1;
+        return steps.map(function(s){
+          return '<div style="margin-bottom:11px"><div style="display:flex;justify-content:'+
+            'space-between;font-size:12px;margin-bottom:4px"><span style="font-weight:500">'+
+            esc(s.l)+'</span><span class="mono" style="color:var(--text-2)">'+s.n+'</span></div>'+
+            '<div style="height:22px;background:var(--card-2);border-radius:7px;overflow:hidden">'+
+            '<div style="height:100%;border-radius:7px;width:'+Math.round(100*s.n/mx)+'%;'+
+            'background:'+s.c+'"></div></div></div>'; }).join('');
+      })()})+
+    card({span:'c6', title:'What decides this', cap:'',
+      body:'<p style="font-size:12.5px;color:var(--text-2);margin:0">The Data Audit names a '+
+        '<b>Founder Sourcing and Eligibility Rubric</b> and a <b>Pitch Rubric</b>. Neither file '+
+        'exists in the data set. Scores decide who gets funded and then disappear, so it is '+
+        'impossible to test whether the selection criteria predict founder outcomes. Recovering '+
+        'those two files is the cheapest analytical win available.</p>'})+
+    '</div>';
+},
+
+program: function(){
+  var rs=apply(), sp=FF.sprint.filter(function(r){
+    return r.y==null||(r.y>=st.from&&r.y<=st.to); });
+  return '<div class="kpis">'+
+    kpi({label:'Cohorts and series', value:nf(FF.sprint_totals.cohorts), color:'var(--s1)',
+         hint:FF.sprint_totals.founders+' founder seats'})+
+    kpi({label:'Sessions delivered', value:nf(FF.sprint_totals.sessions), color:'var(--s2)',
+         hint:FF.sprint_totals.volunteers+' volunteer engagements'})+
+    kpi({label:'Sprint pro bono', value:usdFull(FF.sprint_totals.probono), color:'var(--s3)',
+         hint:'Volunteer list says '+usdFull(FF.volunteers.probono)})+
+    kpi({label:'Volunteers on file', value:nf(FF.volunteers.n), color:'var(--s4)',
+         hint:FF.volunteers.hours+' hours, filled on '+FF.volunteers.hours_filled+' rows'})+
+    kpi({label:'PitchProv responses',
+         value:nf(FF.pitchprov.reduce(function(a,e){return a+e.n;},0)), color:'var(--s5)',
+         hint:FF.pitchprov.length+' events, no email captured'})+
+    '</div><div class="grid">'+
+    card({span:'c8', title:'Advising sessions facilitated',
+      cap:'The Phase 1 note says advising is invisible. It is not. The trend is the story.',
+      body:(function(){
+        var pts=FF.impact_series.filter(function(s){
+          return s.key==='Advising Sessions Facilitated';})[0].points
+          .filter(function(p){return p.year>=st.from&&p.year<=st.to;});
+        var W=660,H=170,PADL=44,ih=H-26;
+        var mx=Math.max.apply(null,pts.map(function(p){return p.v||0;}))||1;
+        var top=Math.ceil(mx/50)*50||1, step=(W-PADL-14)/pts.length, bw=Math.min(34,step*.58);
+        var o=[svgOpen(W,H,'Advising sessions by year')];
+        [0,.5,1].forEach(function(k){ var y=ih-k*ih;
+          o.push('<line x1="'+PADL+'" x2="'+(W-14)+'" y1="'+y+'" y2="'+y+
+            '" stroke="var(--line)" stroke-width="1"/>');
+          o.push('<text x="'+(PADL-8)+'" y="'+(y+3.5)+'" text-anchor="end" font-size="9.5" '+
+            'fill="var(--text-3)" font-family="JetBrains Mono, monospace">'+
+            Math.round(top*k)+'</text>'); });
+        pts.forEach(function(p,i){
+          var cx=PADL+step*i+step/2;
+          if(p.v!=null){ var h=Math.max(3,(p.v/top)*ih);
+            o.push('<rect x="'+(cx-bw/2)+'" y="'+(ih-h)+'" width="'+bw+'" height="'+h+
+              '" rx="5" fill="var(--s3)"><title>'+p.year+': '+p.v+' sessions</title></rect>'); }
+          else { o.push('<rect x="'+(cx-bw/2)+'" y="'+(ih-3)+'" width="'+bw+
+            '" height="3" rx="1.5" fill="var(--hatch)"><title>'+p.year+
+            ': not recorded</title></rect>'); }
+          o.push('<text x="'+cx+'" y="'+(ih+16)+'" text-anchor="middle" font-size="9.5" '+
+            'fill="var(--text-3)" font-family="JetBrains Mono, monospace">\u2019'+
+            String(p.year).slice(2)+'</text>'); });
+        return o.join('')+'</svg>';
+      })()})+
+    card({span:'c4', title:'Award programme', cap:'Click to filter.',
+      body:bars('purpose', apply('purpose'), {padl:150, color:'var(--s2)'})})+
+    card({span:'c12', title:'Sprint cohorts', cap:'Every cohort and learning series on record.',
+      body:'<div class="scroll"><table class="tbl"><thead><tr><th>Cohort</th><th>When</th>'+
+        '<th>Location</th><th>Type</th><th class="n">Capital</th><th class="n">Founders</th>'+
+        '<th class="n">Vols</th><th class="n">Sessions</th><th class="n">Pro bono</th></tr></thead>'+
+        '<tbody>'+sp.map(function(r){
+          return '<tr><td>'+esc(r.cohort)+'</td><td class="mono" style="font-size:11px">'+
+            esc(r.q)+'</td><td>'+esc(r.loc)+'</td><td><span class="pill '+
+            (r.type==='Cohort'?'ok':'warn')+'">'+esc(r.type.toUpperCase())+'</span></td>'+
+            '<td class="n">'+(r.cap?usdFull(r.cap):'-')+'</td><td class="n">'+(r.founders||'-')+
+            '</td><td class="n">'+(r.vols||'-')+'</td><td class="n">'+(r.sessions||'-')+
+            '</td><td class="n">'+(r.probono?usdFull(r.probono):'-')+'</td></tr>'; }).join('')+
+        '</tbody></table></div>'})+
+    card({span:'c12', title:'PitchProv events',
+      cap:'Date and venue live only in the file name. No response carries an email.',
+      body:'<div class="scroll"><table class="tbl"><thead><tr><th>Date</th><th>Venue</th>'+
+        '<th>Audience</th><th class="n">Responses</th><th class="n">Invite a friend</th></tr>'+
+        '</thead><tbody>'+FF.pitchprov.map(function(e){
+          return '<tr><td class="mono" style="font-size:11px">'+esc(e.date)+'</td><td>'+
+            esc(e.venue)+'</td><td><span class="pill '+(e.audience==='Students'?'warn':'ok')+
+            '">'+esc(e.audience.toUpperCase())+'</span></td><td class="n">'+e.n+
+            '</td><td class="n">'+(e.invite==null?'-':e.invite.toFixed(2)+' /5')+'</td></tr>';
+        }).join('')+'</tbody></table></div>'})+
+    notice('no','These four events are not comparable',
+      'Two served student audiences and two served founders and stakeholders. The student event '+
+      'scores 3.31 on inviting a friend against 4.86 and 4.81 at the founder events. Averaging '+
+      'across them produces a number that describes nobody. The confidence question has no '+
+      'parseable values in any of the four files.')+
+    notice('warn','Volunteer pro bono value is computed without hours',
+      'Value is filled on all <b>'+FF.volunteers.n+'</b> volunteer rows but hours on only <b>'+
+      FF.volunteers.hours_filled+'</b>, leaving <b>'+(FF.volunteers.n-FF.volunteers.hours_filled)+
+      '</b> rows with a dollar figure and no hours behind it. <b>'+FF.volunteers.no_year+
+      '</b> rows have no year and no session type, so they cannot be attributed to any programme.')+
+    '</div>';
+},
+
+community: function(){
+  var c=FF.community;
+  return '<div class="kpis">'+
+    kpi({label:'Directory entries', value:nf(c.directory), color:'var(--s1)',
+         hint:'The public founder roster'})+
+    kpi({label:'Hardware survey', value:nf(c.hardware), color:'var(--s2)',
+         hint:c.hardware_apple+' use Apple products'})+
+    kpi({label:'Newsletter survey', value:nf(c.newsletter), color:'var(--no)', vc:'var(--no)',
+         hint:'Too few to analyse'})+
+    kpi({label:'Circle community', value:nf(c.circle), color:'var(--no)', vc:'var(--no)',
+         hint:'Too few to analyse'})+
+    '</div><div class="grid">'+
+    card({span:'c6', title:'Directory by industry', cap:'',
+      body:(function(){
+        var d=c.directory_industry, mx=Math.max.apply(null,d.map(function(r){return r.n;}))||1;
+        return '<svg viewBox="0 0 340 '+(d.length*26)+'">'+d.map(function(r,i){
+          var w=Math.max(3,(r.n/mx)*160);
+          return '<text x="155" y="'+(i*26+16)+'" text-anchor="end" font-size="11" '+
+            'fill="var(--text-2)">'+esc(r.label.slice(0,22))+'</text>'+
+            '<rect x="164" y="'+(i*26+5)+'" width="'+w+'" height="14" rx="7" fill="var(--s2)"/>'+
+            '<text x="'+(172+w)+'" y="'+(i*26+16)+'" font-size="10.5" fill="var(--text-2)" '+
+            'font-family="JetBrains Mono, monospace">'+r.n+'</text>'; }).join('')+'</svg>';
+      })()})+
+    card({span:'c6', title:'Directory by award year', cap:'',
+      body:(function(){
+        var d=c.directory_years.filter(function(r){
+          return +r.label>=st.from && +r.label<=st.to; });
+        if(!d.length) return '<div class="empty">No entries in this range.</div>';
+        var mx=Math.max.apply(null,d.map(function(r){return r.n;}))||1;
+        return '<svg viewBox="0 0 340 '+(d.length*26)+'">'+d.map(function(r,i){
+          var w=Math.max(3,(r.n/mx)*200);
+          return '<text x="52" y="'+(i*26+16)+'" text-anchor="end" font-size="11" '+
+            'fill="var(--text-2)" font-family="JetBrains Mono, monospace">'+esc(r.label)+'</text>'+
+            '<rect x="60" y="'+(i*26+5)+'" width="'+w+'" height="14" rx="7" fill="var(--s1)"/>'+
+            '<text x="'+(68+w)+'" y="'+(i*26+16)+'" font-size="10.5" fill="var(--text-2)" '+
+            'font-family="JetBrains Mono, monospace">'+r.n+'</text>'; }).join('')+'</svg>';
+      })()})+
+    notice('no','Three of four community instruments are below the reporting threshold',
+      'The newsletter survey has <b>'+c.newsletter+'</b> responses, the Circle community survey '+
+      '<b>'+c.circle+'</b>, and the 2026 ten year vision survey <b>'+c.ten_year+'</b>. Nothing '+
+      'here supports a percentage, a trend, or a claim about the network. The hardware survey at '+
+      '<b>'+c.hardware+'</b> is the only one with usable signal, and it was run for a partner.')+
+    '</div>';
+},
+
+alumni: function(){
+  var rs=apply(), f=founders(rs), sv=surviving(rs), alive=sv.yes;
+  var stamp=FF.grants.last_updated[0]||{stamp:'unknown',n:0};
+  return '<div class="kpis">'+
+    kpi({label:'Still in business', value:sv.total?(100*alive/sv.total).toFixed(1)+'%':'0%',
+         color:'var(--warn)', vc:'var(--warn)', hint:alive+' of '+sv.total+' in selection'})+
+    kpi({label:'Alumni founders', value:nf(f), color:'var(--s1)', hint:'Every funded founder'})+
+    kpi({label:'In the public directory', value:nf(FF.community.directory), color:'var(--s2)',
+         hint:FF.founders.overlaps.directory_funded+' match a funded founder'})+
+    kpi({label:'Ten year vision survey', value:nf(FF.community.ten_year), color:'var(--no)',
+         vc:'var(--no)', hint:'Fielded 2026. One response so far.'})+
+    '</div><div class="grid">'+
+    card({span:'c4', title:'Survival rate',
+      cap:'One verdict per founder, from their most recent participation year.',
+      body:ring(alive, sv.total, 'STILL IN BUSINESS', 'var(--warn)')})+
+    card({span:'c4', title:'Status as stored', cap:'Click to filter.',
+      body:bars('alive', apply('alive'), {color:'var(--s3)', padl:86})})+
+    card({span:'c4', title:'Race', cap:DEMO_NOTE,
+      body:bars('race', apply('race'), {color:'var(--s4)', padl:150})})+
+    notice('warn','This number has not been verified since July 2024',
+      'Every record carries a value, so the field looks complete and nobody questions it. But <b>'+
+      stamp.n+' of '+FF.grants.records+'</b> records share a single Last updated stamp of <b>'+
+      esc(stamp.stamp)+'</b>. The column was set in one pass and never revisited. Nothing records '+
+      'how a status is checked, who checks it, or how often, so the figure drifts and the survival '+
+      'rate reported to funders quietly stops being true.',
+      FF.grants.last_updated.map(function(s){
+        return '<span><i>'+esc(s.stamp)+'</i> '+s.n+' records</span>'; }).join(''))+
+    notice('no','Stage 5 has no narrative data at all',
+      'Story tracking appears in the Data Audit under Alumni with nothing behind it. Alumni '+
+      'outcomes rest entirely on one stale yes or no field. The longitudinal survey drafted in '+
+      'Phase 2 is the instrument that fills this stage, and it has not been fielded.')+
+    '</div>';
+}
+};
+
+var NAV=[
+  {id:'overview',  t:'Overview',  n:''},
+  {id:'explore',   t:'Explore',   n:''},
+  {id:'discover',  t:'Discover',  n:'01'},
+  {id:'apply_',    t:'Apply',     n:'02'},
+  {id:'program',   t:'Program',   n:'03'},
+  {id:'community', t:'Community', n:'04'},
+  {id:'alumni',    t:'Alumni',    n:'05'}
+];
+var SUBS={
+  overview:'Ten years across three organisation names. Click any mark to filter every chart.',
+  explore:'Cross-tab any two dimensions. This is the answer to questions nobody wrote down.',
+  discover:'How founders arrive. The census is the widest net and the highest quality file.',
+  apply_:'Selection. The thinnest stage in the journey.',
+  program:'Delivery. Cohorts, advising, volunteers and events.',
+  community:'The network beyond the programme. Small numbers throughout.',
+  alumni:'What happened after, and the one number that needs re-checking.'
+};
+
+/* ===================== url state ===================== */
+function writeHash(){
+  var p=['p='+st.page];
+  if(st.from!==Y0) p.push('from='+st.from);
+  if(st.to!==Y1) p.push('to='+st.to);
+  if(st.page==='explore') p.push('xa='+st.xa, 'xb='+st.xb);
+  activeDims().forEach(function(d){
+    p.push('f.'+d+'='+encodeURIComponent(Array.from(st.f[d]).join('~'))); });
+  history.replaceState(null,'','#'+p.join('&'));
+}
+function readHash(){
+  var h=location.hash.replace(/^#/,''); if(!h) return;
+  h.split('&').forEach(function(part){
+    var i=part.indexOf('='); if(i<0) return;
+    var k=part.slice(0,i), v=decodeURIComponent(part.slice(i+1));
+    if(k==='p' && PAGES[v]) st.page=v;
+    else if(k==='from' && +v) st.from=+v;
+    else if(k==='to' && +v) st.to=+v;
+    else if(k==='xa' && DIMS[v]) st.xa=v;
+    else if(k==='xb' && DIMS[v]) st.xb=v;
+    else if(k.indexOf('f.')===0){
+      var d=k.slice(2);
+      if(DIMS[d] && v) st.f[d]=new Set(v.split('~').map(function(x){
+        return d==='y' ? +x : x; }));
+    }
+  });
+}
+
+/* ===================== render ===================== */
+function renderChips(){
+  var dims=activeDims();
+  if(!dims.length){
+    $('chips').innerHTML='<span class="chips-empty">No filters. Click any bar, segment or '+
+      'cell to narrow everything at once.</span>';
+    return;
+  }
+  var html='<span class="lab">Filters</span>';
+  dims.forEach(function(d){
+    Array.from(st.f[d]).forEach(function(v){
+      html+='<button class="chip" data-rm="'+d+'" data-rmv="'+esc(v)+'">'+
+        '<span class="d">'+esc(DIMS[d].label)+'</span>'+esc(dimName(d,v))+
+        '<span class="x">\u00D7</span></button>';
     });
-  }
-  axis(0, H1, tc, true); axis(H1+GAP, H2, tf, false);
-  out.push('<text x="' + PADL + '" y="-6" font-size="10" fill="var(--text-2)" ' +
-    'font-family="JetBrains Mono, monospace" letter-spacing=".09em">CAPITAL DEPLOYED</text>');
-  out.push('<text x="' + PADL + '" y="' + (H1+GAP-7) + '" font-size="10" fill="var(--text-2)" ' +
-    'font-family="JetBrains Mono, monospace" letter-spacing=".09em">FOUNDERS FUNDED</text>');
-  ys.forEach(function(r, i){
-    var cx = PADL + step*i + step/2;
-    var h1 = Math.max(2, (r.cap/tc)*H1);
-    out.push('<rect x="' + (cx-bw/2) + '" y="' + (H1-h1) + '" width="' + bw + '" height="' + h1 +
-      '" rx="3" fill="var(--s1)"><title>' + r.y + ' \u2014 ' + usd(r.cap) + '</title></rect>');
-    var h2 = Math.max(2, (r.n/tf)*H2);
-    out.push('<rect x="' + (cx-bw/2) + '" y="' + (H1+GAP+H2-h2) + '" width="' + bw + '" height="' + h2 +
-      '" rx="3" fill="var(--s2)"><title>' + r.y + ' \u2014 ' + r.n + ' founders</title></rect>');
-    out.push('<text x="' + cx + '" y="' + (H1+GAP+H2+15) + '" text-anchor="middle" font-size="10" ' +
-      'fill="var(--text-3)" font-family="JetBrains Mono, monospace">\u2019' + String(r.y).slice(2) + '</text>');
   });
-  var be = {};
-  ys.forEach(function(r, i){ if(!be[r.era]) be[r.era] = {a:i, b:i}; be[r.era].b = i; });
-  var ey = H1+GAP+H2+25;
-  ERAS.forEach(function(name, k){
-    var e = be[name]; if(!e) return;
-    var x0 = PADL + step*e.a + 2, x1 = PADL + step*(e.b+1) - 2, w = Math.max(3, x1-x0);
-    out.push('<rect x="' + x0 + '" y="' + ey + '" width="' + w + '" height="5" rx="2.5" fill="' +
-      ['var(--s3)','var(--s4)','var(--s1)'][k] + '"><title>' + esc(name) + '</title></rect>');
-    // A two year band is far narrower than its name, so fall back to the short
-    // form and drop the label entirely when even that will not fit.
-    var full = esc(name), abbr = esc(SHORT[name] || name);
-    var label = w > full.length * 6.2 ? full : (w > abbr.length * 6.2 ? abbr : '');
-    if(label) out.push('<text x="' + x0 + '" y="' + (ey+19) + '" font-size="10.5" ' +
-      'fill="var(--text-2)" font-family="JetBrains Mono, monospace">' + label + '</text>');
-  });
-  return out.join('') + '</svg>';
-}
-
-/* ---- funnel ---- */
-function funnel(steps){
-  var max = Math.max.apply(null, steps.map(function(s){ return s.n; })) || 1;
-  return '<div>' + steps.map(function(s){
-    var pct = Math.round(100 * s.n / max);
-    return '<div style="margin-bottom:9px">' +
-      '<div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:3px">' +
-      '<span style="font-weight:600">' + esc(s.label) + '</span>' +
-      '<span class="mono" style="color:var(--text-2)">' + s.n +
-      (s.note ? ' <span style="color:var(--text-3)">' + esc(s.note) + '</span>' : '') + '</span></div>' +
-      '<div style="height:20px;background:var(--surface-2);border-radius:3px;overflow:hidden">' +
-      '<div style="height:100%;width:' + pct + '%;background:' + (s.color || 'var(--s1)') +
-      ';border-radius:3px"></div></div></div>';
-  }).join('') + '</div>';
-}
-
-/* ---- simple table ---- */
-function table(cols, data, opt){
-  opt = opt || {};
-  if(!data.length) return '<div class="empty">Nothing in this range.</div>';
-  return '<div class="scroll"><table class="tbl"><thead><tr>' +
-    cols.map(function(c){ return '<th' + (c.num ? ' style="text-align:right"' : '') + '>' +
-      esc(c.h) + '</th>'; }).join('') + '</tr></thead><tbody>' +
-    data.map(function(r){ return '<tr>' + cols.map(function(c){
-      return '<td' + (c.num ? ' class="num"' : '') + '>' + c.f(r) + '</td>'; }).join('') + '</tr>';
-    }).join('') + '</tbody></table></div>';
-}
-
-/* ============================ export ============================ */
-var DL = null, EXPORTS = {};
-if(window.claude && window.claude.use){
-  window.claude.use('downloads').then(function(d){
-    DL = d;
-    if(!d) document.querySelectorAll('[data-export]').forEach(function(b){ b.remove(); });
-  }).catch(function(){});
-}
-function csv(rowsArr){
-  return rowsArr.map(function(r){ return r.map(function(c){
-    c = String(c == null ? '' : c);
-    return /[",\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c;
-  }).join(','); }).join('\n');
-}
-async function doExport(id){
-  var e = EXPORTS[id]; if(!e) return;
-  var text = csv([e.cols].concat(e.rows));
-  if(DL){
-    try { await DL.save({filename: e.name + '.csv', data: text}); return; } catch(err){}
-  }
-  try { await navigator.clipboard.writeText(text);
-    alert('Export copied to the clipboard as CSV. Paste it into a sheet.'); }
-  catch(err){ alert('Could not export here. Open the published page to save a file.'); }
-}
-
-/* ============================ pages ============================ */
-function scopeText(){
-  var p = [st.from + ' to ' + st.to];
-  if(st.state) p.push(st.state); if(st.era) p.push(st.era);
-  return p.join(', ');
-}
-
-function pageOverview(){
-  var rs = rows(), adv = FF.impact_series.filter(function(s){ return s.key === 'Advising Sessions Facilitated'; })[0];
-  var advInRange = adv.points.filter(function(p){ return inRange(p.year) && p.v != null; });
-  var alive = FF.grants.survival['Yes'] || 0;
-  var survTot = Object.keys(FF.grants.survival).reduce(function(a,k){ return a + FF.grants.survival[k]; }, 0);
-  EXPORTS.overview_year = {name:'ff_capital_by_year', cols:['Year','Capital','Founders'], rows:(function(){
-    var m = {}; rs.forEach(function(r){ if(r.y==null) return;
-      m[r.y] = m[r.y] || {c:0, f:{}}; m[r.y].c += r.amt; m[r.y].f[r.f]=1; });
-    return Object.keys(m).sort().map(function(y){ return [y, m[y].c, Object.keys(m[y].f).length]; });
-  })()};
-
-  return '<div class="phead"><h2>Overview</h2><p>Ten years of Founder Forward across three ' +
-    'organisation names. These are the figures that survive scrutiny, with every disagreement ' +
-    'between sources shown rather than resolved quietly.</p></div>' +
-    tiles([
-      tile({value:usd(rs.reduce(function(a,r){ return a+r.amt; },0)), label:'Capital deployed',
-            prov:'capital_total', src:'GRANTS',
-            hint:uniq(rs,'f') + ' founders across ' + rs.length + ' awards'}),
-      tile({value:num(uniq(rs,'f')), label:'Founders funded', prov:'founders_funded', src:'GRANTS',
-            hint:'Deduplicated. ' + rs.length + ' award records.'}),
-      tile({value:num(FF.founders.universe), label:'Founders known', src:'5 SOURCES',
-            hint:'Resolved on email across grants, census, directory and interest forms'}),
-      tile({value:num(uniq(rs,'city')), label:'Cities reached', src:'GRANTS',
-            hint:uniq(rs,'st') + ' states and territories'}),
-      tile({value:num(FF.sprint_totals.cohorts), label:'Sprint cohorts run', prov:'sprint_capital',
-            src:'SPRINT', hint:FF.sprint_totals.founders + ' founder seats, ' +
-            FF.sprint_totals.sessions + ' sessions'}),
-      tile({value:num(advInRange.reduce(function(a,p){ return a+p.v; },0)), label:'Advising sessions',
-            prov:'advising_sessions', src:'IMPACT', color:'var(--warn)',
-            hint:'Falling: 179 in 2021 to 10 in 2025'}),
-      tile({value:usd(FF.volunteers.probono), label:'Volunteer pro bono', prov:'volunteer_probono',
-            src:'VOLUNTEERS', conflict:'pro bono',
-            hint:FF.volunteers.n + ' volunteers, ' + FF.volunteers.hours + ' logged hours'}),
-      tile({value:(100*alive/survTot).toFixed(1) + '%', label:'Still in business', color:'var(--warn)',
-            src:'\u26A0 STALE', hint:alive + ' of ' + survTot + ', last checked July 2024'})
-    ]) +
-    sec('Capital and founders over time',
-        'Two measures, two scales, two charts. The band marks which organisation made the award.',
-        '<div class="grid">' + card('Capital deployed and founders funded', '', timeline(rs), true, 'overview_year') + '</div>') +
-    sec('Where the sources disagree',
-        'Alli\u2019s call: show both, flag the delta. These are cleanup tasks, not presentation problems.',
-        FF.conflicts.map(function(c){
-          return notice('warn', c.metric, esc(c.why),
-            c.values.map(function(v){ return '<span><i>' + esc(v.source) + '</i> ' +
-              (typeof v.value === 'number' ? (v.value > 1000 ? usd(v.value) : v.value) : '\u2014') +
-              '</span>'; }).join(''));
-        }).join('') +
-        notice('no', 'Thirty three funded founders can never be joined to anything',
-          'The grants table holds <b>' + FF.grants.founders + '</b> founders but only <b>' +
-          FF.founders.by_population.funded + '</b> carry an email address. Email is the only key ' +
-          'between any two sources here, so the remaining <b>' + FF.founders.unresolvable.funded +
-          '</b> can never be matched to a survey, the census or the directory. No amount of ' +
-          'future survey work reaches them.')) +
-    sec('Source health', 'What loaded, what is missing, and what is excluded by policy.',
-        table([
-          {h:'Source', f:function(r){ return esc(r.label); }},
-          {h:'Stage',  f:function(r){ return '<span class="mono" style="color:var(--text-3);font-size:11px">' +
-                                              esc(r.stage) + '</span>'; }},
-          {h:'Rows', num:true, f:function(r){ return r.rows || '\u2014'; }},
-          {h:'Status', f:function(r){
-            if(r.sensitivity === 'excluded') return '<span class="pill no">EXCLUDED</span>';
-            if(!r.present) return '<span class="pill warn">NO FILE</span>';
-            return '<span class="pill ok">LOADED</span>'; }},
-          {h:'Note', f:function(r){ return '<span style="color:var(--text-3);font-size:12px">' +
-                                            esc(r.note || '') + '</span>'; }}
-        ], FF.meta.sources));
-}
-
-function pageDiscover(){
-  var c = FF.census;
-  EXPORTS.census_year = {name:'ff_census_submissions', cols:['Year','Submissions'],
-    rows:FF.discover.census_by_year.map(function(p){ return [p.year, p.n]; })};
-  return '<div class="phead"><h2>01 Discover</h2><p>How founders arrive. The census is the widest ' +
-    'net Founder Forward has cast and the highest quality file it holds: ' + c.n + ' records, ' +
-    'every one with an email.</p></div>' +
-    tiles([
-      tile({value:num(c.n), label:'Census records', src:'CENSUS',
-            hint:'100% email, 100% growth stage, 98% race'}),
-      tile({value:num(FF.founders.by_population.census), label:'Distinct census emails', src:'CENSUS',
-            hint:'Only ' + FF.founders.overlaps.census_funded + ' of these match a funded founder'}),
-      tile({value:num(FF.discover.acs_interest + FF.discover.acs_application), label:'AI Civic Studio',
-            src:'ACS', hint:FF.discover.acs_interest + ' interest, ' +
-            FF.discover.acs_application + ' application. New programme, 2026.'}),
-      tile({value:num(FF.community.directory), label:'Directory entries', src:'DIRECTORY',
-            hint:FF.founders.overlaps.directory_funded + ' match a funded founder, the best join you have'})
-    ]) +
-    sec('Intake over time', 'When founders entered the census.', '<div class="grid">' +
-      card('Census submissions by year', 'From <span class="mono">Submission Date</span>.',
-           series(FF.discover.census_by_year.map(function(p){ return {year:p.year, v:p.n}; }),
-                  'var(--s2)', {label:'Census submissions'}), false, 'census_year') +
-      card('Growth stage', 'Self-reported at census. Hatched bars are absence, not a category.',
-           hbar(c.growth_stage, 'var(--s1)', {label:'Growth stage'})) +
-      card('Solution type', '', hbar(c.solution_type, 'var(--s1)', {label:'Solution type'})) +
-      card('Top home cities', 'Census only. Award geography sits on the Program tab.',
-           hbar(c.cities, 'var(--s2)', {label:'Home cities', padl:110})) +
-      '</div>') +
-    sec('Census field coverage', 'Where the census is strong and where it stops.',
-      table([
-        {h:'Field', f:function(r){ return esc(r.label); }},
-        {h:'Coverage', f:function(r){
-          var col = r.pct >= 95 ? 'var(--ok)' : r.pct >= 60 ? 'var(--warn)' : 'var(--no)';
-          return '<div class="track"><div class="fill" style="width:' + r.pct + '%;background:' + col + '"></div></div>'; }},
-        {h:'Filled', num:true, f:function(r){ return r.filled + '/' + r.total; }},
-        {h:'%', num:true, f:function(r){ return r.pct + '%'; }}
-      ], c.coverage));
-}
-
-function pageApply(){
-  var f = FF.census.funnel;
-  var val = function(k){ var x = f.filter(function(r){ return r.label === k; })[0]; return x ? x.n : 0; };
-  var scored = f.filter(function(r){ return r.label !== '(not set)'; })
-                .reduce(function(a,r){ return a + r.n; }, 0);
-  return '<div class="phead"><h2>02 Apply</h2><p>Selection is the thinnest stage in the whole ' +
-    'journey. The census <span class="mono">Cohort Status</span> field is the only record of who ' +
-    'was considered and who was not.</p></div>' +
-    tiles([
-      tile({value:num(FF.census.n), label:'In the census', src:'CENSUS', hint:'The pool considered'}),
-      tile({value:num(scored), label:'Given a status', prov:'selection_funnel', src:'CENSUS',
-            hint:(FF.census.n - scored) + ' records were never triaged'}),
-      tile({value:num(val('Completed')), label:'Completed', src:'CENSUS', color:'var(--ok)',
-            hint:'Reached the end of a cohort'}),
-      tile({value:num(val('Not Eligible')), label:'Not eligible', src:'CENSUS', color:'var(--no)',
-            hint:'Screened out. No reason is recorded anywhere.'})
-    ]) +
-    sec('The funnel as it exists', 'Built from one field, because no other record survives.',
-      '<div class="grid">' +
-      card('Cohort status', 'Every founder in the census, by where selection left them.',
-        funnel([
-          {label:'In the census', n:FF.census.n, color:'var(--s1)'},
-          {label:'Pending', n:val('Pending'), color:'var(--s3)'},
-          {label:'Completed', n:val('Completed'), color:'var(--s2)'},
-          {label:'Not eligible', n:val('Not Eligible'), color:'var(--s4)'},
-          {label:'Never triaged', n:val('(not set)'), color:'var(--hatch)'}
-        ])) +
-      card('What decides this', 'Nothing here explains why.',
-        notice('no', 'Both rubrics are missing',
-          'The Data Audit names a <b>Founder Sourcing and Eligibility Rubric</b> and a ' +
-          '<b>Pitch Rubric</b>. Neither file exists in the data set. Scores decide who gets funded ' +
-          'and then disappear, so it is impossible to test whether the selection criteria predict ' +
-          'founder outcomes. Recovering these two files is the cheapest analytical win available.')) +
-      '</div>');
-}
-
-function pageProgram(){
-  var rs = rows();
-  var sp = FF.sprint.filter(function(r){ return inRange(r.y); });
-  EXPORTS.sprint = {name:'ff_sprint_cohorts',
-    cols:['Cohort','Date','Location','Type','Partner','Capital','Founders','Volunteers','Sessions','ProBono'],
-    rows:sp.map(function(r){ return [r.cohort,r.q,r.loc,r.type,r.partner,r.cap,r.founders,r.vols,r.sessions,r.probono]; })};
-  EXPORTS.events = {name:'ff_pitchprov_events', cols:['Date','Venue','Responses','Audience','InviteScore'],
-    rows:FF.pitchprov.map(function(e){ return [e.date,e.venue,e.n,e.audience,e.invite]; })};
-
-  var deliv = FF.impact_series.filter(function(s){
-    return ['PitchProv','Office Hours','Co-Working Hours','Workshops','Social Hours'].indexOf(s.key) !== -1; });
-
-  return '<div class="phead"><h2>03 Program</h2><p>Delivery. Sprint cohorts, advising, volunteers ' +
-    'and events. This is the stage your team asks the most questions about and the stage where the ' +
-    'data is most scattered.</p></div>' +
-    tiles([
-      tile({value:num(FF.sprint_totals.cohorts), label:'Cohorts and series', src:'SPRINT',
-            hint:FF.sprint_totals.founders + ' founder seats'}),
-      tile({value:num(FF.sprint_totals.sessions), label:'Sessions delivered', src:'SPRINT',
-            hint:FF.sprint_totals.volunteers + ' volunteer engagements'}),
-      tile({value:usd(FF.sprint_totals.probono), label:'Sprint pro bono', prov:'sprint_probono',
-            src:'SPRINT', conflict:'pro bono', hint:'Volunteer list says ' + usd(FF.volunteers.probono)}),
-      tile({value:num(FF.volunteers.n), label:'Volunteers on file', prov:'volunteer_probono',
-            src:'VOLUNTEERS', hint:FF.volunteers.hours + ' hours, filled on ' +
-            FF.volunteers.hours_filled + ' of ' + FF.volunteers.n + ' rows'}),
-      tile({value:num(FF.pitchprov.reduce(function(a,e){ return a+e.n; },0)), label:'PitchProv responses',
-            prov:'pitchprov_responses', src:'PITCHPROV', hint:FF.pitchprov.length + ' events, no email captured'}),
-      tile({value:num(FF.advising.n), label:'Advising pre-survey', src:'ADVISING',
-            hint:'Founders and volunteers share one form'})
-    ]) +
-    sec('Advising is tracked, and it is collapsing',
-        'The Phase 1 note says advising is invisible. It is not. It is in the impact stats and the trend is the story.',
-      '<div class="grid">' +
-      card('Advising sessions facilitated', 'From <span class="mono">Historical Impact Stats</span>. ' +
-        'Hatched stubs are years with no value recorded.',
-        series(FF.impact_series.filter(function(s){ return s.key === 'Advising Sessions Facilitated'; })[0].points,
-               'var(--s3)', {label:'Advising sessions', h:110})) +
-      card('Volunteer supply by year', 'Volunteers on file, by the year they volunteered.',
-        hbar(FF.volunteers.by_year.filter(function(p){ return inRange(p.year); })
-               .map(function(p){ return {label:String(p.year), n:p.n}; }), 'var(--s2)',
-             {label:'Volunteers by year', padl:60})) +
-      '</div>' +
-      notice('warn', 'Volunteer pro bono value is computed without hours',
-        'Pro bono value is filled on all <b>' + FF.volunteers.n + '</b> volunteer rows, but hours ' +
-        'on only <b>' + FF.volunteers.hours_filled + '</b>. That leaves <b>' +
-        (FF.volunteers.n - FF.volunteers.hours_filled) + '</b> rows carrying a dollar value with no ' +
-        'hours behind it. <b>' + FF.volunteers.no_year + '</b> rows also have no volunteer year and ' +
-        'no session type, so they cannot be attributed to any programme or period.')) +
-    sec('Sprint cohorts', 'Every cohort and learning series on record.',
-      '<div class="grid">' + card('Cohorts', '', table([
-        {h:'Cohort', f:function(r){ return esc(r.cohort); }},
-        {h:'When', f:function(r){ return '<span class="mono" style="font-size:12px">' + esc(r.q) + '</span>'; }},
-        {h:'Location', f:function(r){ return esc(r.loc); }},
-        {h:'Type', f:function(r){ return '<span class="pill ' + (r.type === 'Cohort' ? 'ok' : 'warn') +
-                                          '">' + esc(r.type.toUpperCase()) + '</span>'; }},
-        {h:'Capital', num:true, f:function(r){ return r.cap ? usd(r.cap) : '\u2014'; }},
-        {h:'Founders', num:true, f:function(r){ return r.founders || '\u2014'; }},
-        {h:'Vols', num:true, f:function(r){ return r.vols || '\u2014'; }},
-        {h:'Sessions', num:true, f:function(r){ return r.sessions || '\u2014'; }},
-        {h:'Pro bono', num:true, f:function(r){ return r.probono ? usd(r.probono) : '\u2014'; }}
-      ], sp), true, 'sprint') + '</div>') +
-    sec('Events and delivery counts', 'The only source for these is the annual impact stats sheet.',
-      '<div class="grid">' + deliv.map(function(s){
-        return card(s.label, s.filled + ' of ' + s.years + ' years have a value.',
-          series(s.points, 'var(--s1)', {label:s.label, h:78}));
-      }).join('') + '</div>') +
-    sec('PitchProv events', 'Event date and venue live only in the file name, and no response carries an email.',
-      '<div class="grid">' + card('Events', '', table([
-        {h:'Date', f:function(r){ return '<span class="mono" style="font-size:12px">' + esc(r.date) + '</span>'; }},
-        {h:'Venue', f:function(r){ return esc(r.venue); }},
-        {h:'Audience', f:function(r){ return '<span class="pill ' +
-          (r.audience === 'Students' ? 'warn' : 'ok') + '">' + esc(r.audience.toUpperCase()) + '</span>'; }},
-        {h:'Responses', num:true, f:function(r){ return r.n; }},
-        {h:'Invite a friend', num:true, f:function(r){ return r.invite == null ? '\u2014' :
-          r.invite.toFixed(2) + ' <span style="color:var(--text-3)">/5</span>'; }}
-      ], FF.pitchprov), true, 'events') + '</div>' +
-      notice('no', 'These four events are not comparable',
-        'Two served student audiences (freshman through senior) and two served founders and ' +
-        'community stakeholders. The student event scores 3.31 on inviting a friend against 4.86 ' +
-        'and 4.81 at the founder events. Averaging across them would produce a number that ' +
-        'describes nobody. The confidence question has no parseable values in any of the four ' +
-        'files, so programme confidence remains unmeasured.')) +
-    sec('Capital awards', 'From the grants table, filtered by the controls above.',
-      '<div class="grid">' +
-      card('Capital and founders by year', '', timeline(rs), true) +
-      card('Growth stage at award', 'Hatched bar is the ' + FF.grants.unlinked +
-        ' records with no linked founder profile.',
-        hbar((function(){ var m = {}; rs.forEach(function(r){ var k = r.stage || '(not recorded)';
-          m[k] = (m[k]||0)+1; });
-          return Object.keys(m).map(function(k){ return {label:k, n:m[k]}; })
-                   .sort(function(a,b){ return b.n-a.n; }); })(), 'var(--s1)', {label:'Growth stage'})) +
-      card('Top cities by award', '',
-        hbar((function(){ var m = {}; rs.forEach(function(r){ if(!r.city) return;
-          m[r.city] = (m[r.city]||0)+1; });
-          return Object.keys(m).map(function(k){ return {label:k, n:m[k]}; })
-                   .sort(function(a,b){ return b.n-a.n; }).slice(0,9); })(), 'var(--s2)',
-             {label:'Cities', padl:106})) +
-      '</div>');
-}
-
-function pageCommunity(){
-  var c = FF.community;
-  return '<div class="phead"><h2>04 Community</h2><p>The network beyond the programme. Every ' +
-    'instrument here is small, and three of them are too small to describe in percentages.</p></div>' +
-    tiles([
-      tile({value:num(c.directory), label:'Directory entries', src:'DIRECTORY',
-            hint:'The public-facing founder roster'}),
-      tile({value:num(c.hardware), label:'Hardware survey', src:'HARDWARE',
-            hint:c.hardware_apple + ' use Apple products'}),
-      tile({value:num(c.newsletter), label:'Newsletter survey', src:'NEWSLETTER',
-            color:'var(--no)', hint:'Too few to analyse'}),
-      tile({value:num(c.circle), label:'Circle community survey', src:'CIRCLE',
-            color:'var(--no)', hint:'Too few to analyse'})
-    ]) +
-    sec('The directory', 'Your best bridge between sources.', '<div class="grid">' +
-      card('Directory by award year', '',
-        hbar(c.directory_years.filter(function(r){ return inRange(+r.label); }), 'var(--s2)',
-             {label:'Directory by year', padl:60})) +
-      card('Directory by industry', '', hbar(c.directory_industry, 'var(--s1)', {label:'Industry'})) +
-      '</div>') +
-    sec('Community instruments', 'Reported as counts, never percentages.',
-      notice('no', 'Three of four community instruments are below the reporting threshold',
-        'The newsletter survey has <b>' + c.newsletter + '</b> responses, the Circle community ' +
-        'survey <b>' + c.circle + '</b>, and the 2026 ten year vision survey <b>' + c.ten_year +
-        '</b>. Nothing here supports a percentage, a trend, or a claim about the network. The ' +
-        'Community stage of the journey map was already flagged as collecting nothing; these ' +
-        'files confirm it rather than fix it. The hardware survey at <b>' + c.hardware +
-        '</b> responses is the only one with usable signal, and it was run for a partner, not for impact.'));
-}
-
-function pageAlumni(){
-  var alive = FF.grants.survival['Yes'] || 0;
-  var tot = Object.keys(FF.grants.survival).reduce(function(a,k){ return a+FF.grants.survival[k]; },0);
-  var stamp = FF.grants.last_updated[0] || {stamp:'unknown', n:0};
-  return '<div class="phead"><h2>05 Alumni</h2><p>What happened after. This stage carries the ' +
-    'single most consequential number Founder Forward reports, and the least maintained.</p></div>' +
-    tiles([
-      tile({value:(100*alive/tot).toFixed(1) + '%', label:'Still in business', color:'var(--warn)',
-            src:'\u26A0 STALE', hint:alive + ' of ' + tot + ' founders'}),
-      tile({value:num(tot), label:'Alumni founders', src:'GRANTS', hint:'Every funded founder'}),
-      tile({value:num(FF.community.directory), label:'In the public directory', src:'DIRECTORY',
-            hint:FF.founders.overlaps.directory_funded + ' match a funded founder'}),
-      tile({value:num(FF.community.ten_year), label:'Ten year vision survey', color:'var(--no)',
-            src:'10-YEAR', hint:'Fielded 2026. One response so far.'})
-    ]) +
-    sec('Survival rate', 'One field carries the entire Table 1 survival story.',
-      notice('warn', 'This number has not been verified since July 2024',
-        'Every record carries a value, so the field looks complete and nobody questions it. But ' +
-        '<b>' + stamp.n + ' of ' + FF.grants.records + '</b> records share a single ' +
-        '<span class="mono">Last updated</span> stamp of <b>' + esc(stamp.stamp) + '</b>. The ' +
-        'column was set in one pass and never revisited. Nothing records how a founder\u2019s ' +
-        'status is checked, who checks it, or how often, so the figure drifts and the survival ' +
-        'rate reported to funders quietly stops being true. This is the cheapest gap on the list ' +
-        'to close and the most expensive to ignore.',
-        FF.grants.last_updated.map(function(s){
-          return '<span><i>' + esc(s.stamp) + '</i> ' + s.n + ' records</span>'; }).join('')) +
-      '<div class="grid" style="margin-top:14px">' +
-      card('Status as stored', 'One verdict per founder, from their most recent participation year.',
-        hbar(Object.keys(FF.grants.survival).map(function(k){
-          return {label:k, n:FF.grants.survival[k]}; }).sort(function(a,b){ return b.n-a.n; }),
-          'var(--s3)', {label:'Survival', padl:80, pct:tot})) +
-      card('Founder race and ethnicity', 'Aggregate only and deliberately not filterable. ' +
-        'Denominator is the <b>' + FF.demographics.denominator + '</b> founders with a linked ' +
-        'profile, not all ' + FF.grants.founders + '.',
-        hbar(FF.demographics.race, 'var(--s2)', {label:'Race', padl:168,
-             pct:FF.demographics.denominator})) +
-      '</div>') +
-    sec('Story tracking', 'Named in the Data Audit with no link and no file.',
-      notice('no', 'Stage 5 has no narrative data at all',
-        'Story tracking appears in the Data Audit under Alumni with nothing behind it. Alumni ' +
-        'outcomes therefore rest entirely on one stale yes or no field. The longitudinal survey ' +
-        'drafted in Phase 2 is the instrument that fills this stage, and it has not been fielded.'));
-}
-
-/* ============================ render ============================ */
-var RENDER = {overview:pageOverview, discover:pageDiscover, apply:pageApply,
-               program:pageProgram, community:pageCommunity, alumni:pageAlumni};
-
-function matchQ(html){
-  if(!st.q) return true;
-  return html.toLowerCase().indexOf(st.q.toLowerCase()) !== -1;
+  html+='<button class="chip-clear" id="clearall">Clear all</button>';
+  $('chips').innerHTML=html;
 }
 
 function render(){
-  $('rail').innerHTML = TABS.map(function(t, i){
-    return '<button class="tab" role="tab" data-tab="' + t.id + '" aria-selected="' +
-      (st.tab === t.id) + '">' + (t.n ? '<span class="tn">' + t.n + '</span>' : '') +
-      '<span class="tl">' + t.l + '</span></button>';
-  }).join('');
-
-  TABS.forEach(function(t){
-    var el = $('p-' + t.id);
-    if(t.id === st.tab){ el.innerHTML = RENDER[t.id](); el.hidden = false; }
-    else { el.hidden = true; el.innerHTML = ''; }
-  });
-
-  if(st.q){
-    var page = $('p-' + st.tab);
-    var hits = 0;
-    page.querySelectorAll('.sec').forEach(function(s){
-      var hit = matchQ(s.textContent);
-      s.hidden = !hit; if(hit) hits++;
-    });
-    var t0 = page.querySelector('.tiles');
-    if(t0){ var any = false;
-      t0.querySelectorAll('.tile').forEach(function(b){
-        var hit = matchQ(b.textContent); b.style.display = hit ? '' : 'none'; if(hit) any = true; });
-      t0.style.display = any ? '' : 'none'; if(any) hits++;
-    }
-    if(!hits) page.insertAdjacentHTML('beforeend',
-      '<div class="empty">Nothing on this tab matches \u201C' + esc(st.q) +
-      '\u201D. Try another tab, or clear the box.</div>');
-  }
-
-  var rs = rows();
-  $('scope').innerHTML =
-    '<span>Scope <b>' + esc(scopeText()) + '</b></span>' +
-    '<span><b>' + rs.length + '</b> of ' + ROWS.length + ' award records</span>' +
-    '<span><b>' + uniq(rs, 'f') + '</b> founders</span>' +
-    '<span><b>' + usd(rs.reduce(function(a,r){ return a+r.amt; },0)) + '</b> deployed</span>' +
-    (filtersActive() ? '<span style="color:var(--warn)">Filters change award figures only. ' +
-      'Census, volunteer and event counts are whole-file totals.</span>' : '');
-
+  $('nav').innerHTML='<div class="nl">Sections</div>'+NAV.map(function(t){
+    return '<button data-p="'+t.id+'" aria-current="'+(st.page===t.id)+'">'+
+      (t.n?'<span class="mono" style="font-size:9px;opacity:.6;width:14px">'+t.n+'</span>':
+           '<span style="width:14px"></span>')+t.t+'</button>'; }).join('');
+  $('pt').textContent=NAV.filter(function(t){return t.id===st.page;})[0].t;
+  $('ptsub').textContent=SUBS[st.page];
+  renderChips();
+  $('view').innerHTML=PAGES[st.page]();
   writeHash();
 }
 
-/* ============================ wiring ============================ */
-function fill(sel, list, cur){
-  sel.innerHTML = list.map(function(o){
-    return '<option value="' + esc(o.v) + '"' + (String(o.v) === String(cur) ? ' selected' : '') +
-      '>' + esc(o.t) + '</option>'; }).join('');
-}
-var yopts = []; for(var y = Y0; y <= Y1; y++) yopts.push({v:y, t:y});
-
-document.addEventListener('click', function(e){
-  var tab = e.target.closest('[data-tab]');
-  if(tab){ st.tab = tab.dataset.tab; render(); scrollTo({top:0, behavior:'smooth'}); return; }
-  var t = e.target.closest('.tile');
-  if(t){ openProv(t.dataset.prov, t.dataset.title); return; }
-  var ex = e.target.closest('[data-export]');
-  if(ex){ doExport(ex.dataset.export); return; }
+/* ===================== events ===================== */
+document.addEventListener('click',function(e){
+  var p=e.target.closest('[data-p]');
+  if(p){ st.page=p.dataset.p; render(); scrollTo({top:0,behavior:'smooth'}); return; }
+  var rm=e.target.closest('[data-rm]');
+  if(rm){ toggle(rm.dataset.rm, rm.dataset.rmv); return; }
+  if(e.target.closest('#clearall')){ st.f={}; render(); return; }
+  var m=e.target.closest('[data-d]');
+  if(m){ var d=m.dataset.d, v=m.dataset.v;
+    toggle(d, d==='y' ? +v : v); return; }
+  var m2=e.target.closest('[data-d2]');
+  if(m2){
+    var ds=m2.dataset.d2.split(SEP), vs=m2.dataset.v2.split(SEP);
+    ['0','1'].forEach(function(i){
+      var dd=ds[i], vv=ds[i]==='y'?+vs[i]:vs[i], s=sel(dd);
+      if(s.has(vv)) s.delete(vv); else s.add(vv);
+      if(!s.size) delete st.f[dd];
+    });
+    render(); return;
+  }
+  var mm=e.target.closest('[data-m]');
+  if(mm){ st.measure=mm.dataset.m; render(); return; }
 });
-$('fy').onchange = function(){ st.from = +this.value;
-  if(st.to < st.from){ st.to = st.from; $('ty').value = st.to; } render(); };
-$('ty').onchange = function(){ st.to = +this.value;
-  if(st.from > st.to){ st.from = st.to; $('fy').value = st.from; } render(); };
-$('fs').onchange = function(){ st.state = this.value; render(); };
-$('fe').onchange = function(){ st.era = this.value; render(); };
-var qt; $('q').oninput = function(){ var v = this.value.trim();
-  clearTimeout(qt); qt = setTimeout(function(){ st.q = v; render(); }, 130); };
-$('reset').onclick = function(){
-  st = {tab:st.tab, from:Y0, to:Y1, state:'', era:'', q:''};
-  $('fy').value = Y0; $('ty').value = Y1; $('fs').value = ''; $('fe').value = ''; $('q').value = '';
-  render();
-};
-$('copylink').onclick = function(){
-  var btn = this;
+document.addEventListener('mousemove',function(e){
+  var t=e.target.closest('[data-t]');
+  if(t) tipOn(e,t.dataset.t); else tipOff();
+});
+document.addEventListener('change',function(e){
+  if(e.target.id==='xa'){ st.xa=e.target.value; render(); }
+  if(e.target.id==='xb'){ st.xb=e.target.value; render(); }
+});
+
+/* year range */
+function fill(sel_,list,cur){
+  sel_.innerHTML=list.map(function(v){
+    return '<option value="'+v+'"'+(+v===+cur?' selected':'')+'>'+v+'</option>'; }).join('');
+}
+var yopts=[]; for(var yy=Y0;yy<=Y1;yy++) yopts.push(yy);
+$('fy').onchange=function(){ st.from=+this.value;
+  if(st.to<st.from){ st.to=st.from; $('ty').value=st.to; } render(); };
+$('ty').onchange=function(){ st.to=+this.value;
+  if(st.from>st.to){ st.from=st.to; $('fy').value=st.from; } render(); };
+$('copylink').onclick=function(){
+  var b=this;
   navigator.clipboard.writeText(location.href).then(function(){
-    btn.textContent = 'Link copied'; btn.classList.add('on');
-    setTimeout(function(){ btn.textContent = 'Copy link to this view'; btn.classList.remove('on'); }, 1600);
-  }, function(){ btn.textContent = 'Copy failed'; setTimeout(function(){
-    btn.textContent = 'Copy link to this view'; }, 1600); });
+    b.textContent='Copied'; setTimeout(function(){ b.textContent='Copy link'; },1500);
+  },function(){ b.textContent='Copy failed'; setTimeout(function(){ b.textContent='Copy link'; },1500); });
+};
+
+/* theme: explicit choice wins over the OS in both directions */
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  try{ localStorage.setItem('ff-theme',t); }catch(err){}
+}
+(function(){
+  var saved=null;
+  try{ saved=localStorage.getItem('ff-theme'); }catch(err){}
+  setTheme(saved === 'dark' || saved === 'light' ? saved : 'light');
+})();
+$('theme').onclick=function(){
+  setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
 };
 
 readHash();
-fill($('fy'), yopts, st.from);
-fill($('ty'), yopts, st.to);
-fill($('fs'), [{v:'', t:'All'}].concat(STATES.map(function(s){ return {v:s, t:s}; })), st.state);
-fill($('fe'), [{v:'', t:'All eras'}].concat(ERAS.map(function(s){ return {v:s, t:s}; })), st.era);
-$('q').value = st.q;
-
-$('m-src').textContent  = FF.meta.sources.filter(function(s){ return s.present; }).length + ' of ' + FF.meta.sources.length;
-$('m-rows').textContent = FF.meta.sources.reduce(function(a,s){ return a + s.rows; }, 0).toLocaleString('en-US');
-$('m-conf').textContent = FF.conflicts.length;
-$('m-gen').textContent  = FF.meta.generated;
-
+fill($('fy'),yopts,st.from); fill($('ty'),yopts,st.to);
+$('sf-src').textContent=FF.meta.sources.filter(function(s){return s.present;}).length+' of '+
+  FF.meta.sources.length;
+$('sf-rows').textContent=FF.meta.sources.reduce(function(a,s){return a+s.rows;},0).toLocaleString('en-US');
+$('sf-gen').textContent=FF.meta.generated;
 render();
 })();
 </script>
