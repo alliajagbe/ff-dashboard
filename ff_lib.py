@@ -315,13 +315,18 @@ def build():
         sprint_rows.append({
             'cohort': g(r, 'Cohort'), 'y': year_of(d), 'q': d,
             'loc': g(r, 'Location'), 'status': g(r, 'Status'),
-            'cap': round(money(g(r, 'Capital Raised'))),
+            'cap': money(g(r, 'Capital Raised')),
             'founders': num(g(r, 'Founders')) or 0,
             'vols': num(g(r, 'Volunteers')) or 0,
             'sessions': num(g(r, 'Sessions')) or 0,
             'hours': num(g(r, '# of Hours')),
-            'probono': round(money(g(r, 'Pro Bono Value'))),
-            'type': g(r, 'Type'), 'partner': g(r, 'Partner'), 'theme': g(r, 'Theme'),
+            'probono': money(g(r, 'Pro Bono Value')),
+            'type': g(r, 'Type'), 'status': g(r, 'Status'),
+            'partner': [p.strip() for p in re.split(r'[,/]', g(r, 'Partner')) if p.strip()],
+            # Theme is comma separated but several rows file a city here instead of
+            # a theme, which the UI flags rather than silently cleans.
+            'theme': [t.strip().strip('"') for t in re.split(r',(?=[A-Z])', g(r, 'Theme'))
+                      if t.strip().strip('"')],
         })
     sprint_pb  = round(sum(money(g(r, 'Pro Bono Value')) for r in sprint))
     sprint_cap = round(sum(money(g(r, 'Capital Raised')) for r in sprint))
@@ -363,37 +368,73 @@ def build():
                     c[part.split(':')[0]] += 1
         return [{'label': k, 'n': v} for k, v in c.most_common()]
 
-    # ---- pitchprov, segmented because audiences differ
-    def audience(rows_):
-        roles = [g(r, list(r.keys())[1]) for r in rows_]
-        student = sum(1 for x in roles if re.search(
-            r'freshman|sophomore|junior|senior', x, re.I))
-        return 'Students' if student > len(rows_) / 2 else 'Founders and stakeholders'
+    # ---- pitchprov.
+    # Questions 3 to 5 are answered with words ("Strongly agree"), not digits, so a
+    # numeric-only parse reports them as empty. They are fully answered.
+    LIKERT = {'strongly disagree': 1, 'disagree': 2, 'neutral': 3, 'agree': 4,
+              'strongly agree': 5, 'not likely': 1, 'likely': 5}
+    QUESTIONS = [
+        {'key': 'invite',     'short': 'Would invite a friend',
+         'text': 'How likely are you to invite a friend to another PitchProv?'},
+        {'key': 'community',  'short': 'Sense of community',
+         'text': 'Attending PitchProv increased my sense of community'},
+        {'key': 'confidence', 'short': 'Communication confidence',
+         'text': 'Attending PitchProv increased my confidence in my communication skills'},
+        {'key': 'ecosystem',  'short': 'Commitment to the ecosystem',
+         'text': 'Participating increased my commitment to supporting entrepreneurial ecosystems'},
+    ]
+
+    def likert(v):
+        v = (v or '').strip()
+        if re.match(r'^[1-5](\.0)?$', v):
+            return int(float(v))
+        return LIKERT.get(v.lower())
 
     events = []
     by_file = collections.defaultdict(list)
     for r in pitch:
         by_file[r['__file']].append(r)
+
     for fn, rs in sorted(by_file.items()):
         m = re.match(r'(\d+)_(\d+)_(\d+)\s*-\s*(.*?)-All', fn)
         cols = [c for c in rs[0] if c != '__file']
-        scores = [num(g(r, cols[2])) for r in rs]
-        scores = [s for s in scores if s is not None and 1 <= s <= 5]
+        roles = collections.Counter()
+        youth = 0
+        for r in rs:
+            parts = [p.strip() for p in g(r, cols[1]).split(',') if p.strip()]
+            for p in parts:
+                roles[p] += 1
+                if re.search(r'freshman|sophomore|junior|senior', p, re.I):
+                    youth += 1
+        qs = []
+        for i, q in enumerate(QUESTIONS):
+            vals = [likert(g(r, cols[2 + i])) for r in rs]
+            vals = [v for v in vals if v]
+            qs.append({'key': q['key'], 'short': q['short'], 'text': q['text'],
+                       'n': len(vals),
+                       'mean': round(sum(vals) / len(vals), 2) if vals else None,
+                       'dist': [sum(1 for v in vals if v == k) for k in range(1, 6)]})
         events.append({
             'date': '%s/%s/%s' % (m.group(1), m.group(2), m.group(3)) if m else '',
             'y': 2000 + int(m.group(3)) if m else None,
+            'sort': (2000 + int(m.group(3)), int(m.group(1)), int(m.group(2))) if m else (0, 0, 0),
             'venue': m.group(4).strip() if m else fn,
-            'n': len(rs), 'audience': audience(rs),
-            'invite': round(sum(scores) / len(scores), 2) if scores else None,
-            'invite_n': len(scores),
-            'roles': [{'label': k, 'n': v} for k, v in
-                      collections.Counter(g(r, cols[1]) for r in rs).most_common(6) if k],
+            'n': len(rs),
+            # A youth event is one where school year appears at all, which is what
+            # actually separates these audiences.
+            'audience': 'Students and youth' if youth else 'Founders and stakeholders',
+            'roles': [{'label': k, 'n': v} for k, v in roles.most_common()],
+            'comments': sum(1 for r in rs if len(g(r, cols[6])) > 3),
+            'questions': qs,
         })
-    P.add('pitchprov_responses', 'pitchprov', 'all columns', sum(e['n'] for e in events),
-          denom=len(events),
-          note='Two events served student audiences and two served founders and stakeholders. '
-               'Scores must never be pooled across those. The confidence question has no '
-               'parseable values in any of the four files.')
+    events.sort(key=lambda e: e['sort'])
+    for e in events:
+        e.pop('sort')
+
+    P.add('pitchprov_responses', 'pitchprov', 'all four rated questions',
+          sum(e['n'] for e in events), denom=len(events),
+          note='Two events served students and youth, two served founders and stakeholders. '
+               'Scores must never be pooled across those audiences.')
 
     # ---- census, selection funnel and profile
     funnel = tally(census, 'Cohort Status', blank_label='(not set)')
@@ -456,6 +497,7 @@ def build():
             'skills': tally(vols, 'Skills', top=10),
         },
         'pitchprov': events,
+        'pitchprov_questions': QUESTIONS,
         'census': {
             'n': len(census), 'funnel': funnel,
             'growth_stage': tally(census, 'Growth Stage', blank_label='(not recorded)'),

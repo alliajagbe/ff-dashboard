@@ -257,10 +257,10 @@ window.FF = {
    "source": "PitchProv event surveys",
    "source_id": "pitchprov",
    "file": "*PitchProv.csv",
-   "field": "all columns",
+   "field": "all four rated questions",
    "value": 97,
    "denom": 4,
-   "note": "Two events served student audiences and two served founders and stakeholders. Scores must never be pooled across those. The confidence question has no parseable values in any of the four files.",
+   "note": "Two events served students and youth, two served founders and stakeholders. Scores must never be pooled across those audiences.",
    "asof": "2026-09-17"
   },
   "selection_funnel": {
@@ -1025,15 +1025,20 @@ window.FF = {
    "q": "2020 Q3",
    "loc": "Texas",
    "status": "Completed",
-   "cap": 8000,
+   "cap": 8000.0,
    "founders": 5.0,
    "vols": 0,
    "sessions": 0,
    "hours": null,
-   "probono": 0,
+   "probono": 0.0,
    "type": "Cohort",
-   "partner": "DivInc / BLNDED",
-   "theme": "Health & Wellness"
+   "partner": [
+    "DivInc",
+    "BLNDED"
+   ],
+   "theme": [
+    "Health & Wellness"
+   ]
   },
   {
    "cohort": "Diverse SAAS",
@@ -1041,15 +1046,19 @@ window.FF = {
    "q": "2020 Q3",
    "loc": "National",
    "status": "Completed",
-   "cap": 8000,
+   "cap": 8000.0,
    "founders": 5.0,
    "vols": 0,
    "sessions": 0,
    "hours": null,
-   "probono": 0,
+   "probono": 0.0,
    "type": "Cohort",
-   "partner": "Envolve",
-   "theme": "Tech"
+   "partner": [
+    "Envolve"
+   ],
+   "theme": [
+    "Tech"
+   ]
   },
   {
    "cohort": "Indigenous Futures",
@@ -1057,15 +1066,20 @@ window.FF = {
    "q": "2020 Q3",
    "loc": "Albuquerque",
    "status": "Completed",
-   "cap": 8000,
+   "cap": 8000.0,
    "founders": 4.0,
    "vols": 0,
    "sessions": 0,
    "hours": null,
-   "probono": 0,
+   "probono": 0.0,
    "type": "Cohort",
-   "partner": "Native Women Lead",
-   "theme": "Community / Economic Power,Indigenous"
+   "partner": [
+    "Native Women Lead"
+   ],
+   "theme": [
+    "Community / Economic Power",
+    "Indigenous"
+   ]
   },
   {
    "cohort": "Louisville Triumphant 1",
@@ -1073,15 +1087,23 @@ window.FF = {
    "q": "2021 Q1",
    "loc": "Louisville",
    "status": "Completed",
-   "cap": 16628,
+   "cap": 16628.48,
    "founders": 5.0,
    "vols": 14.0,
    "sessions": 20.0,
    "hours": null,
-   "probono": 4400,
+   "probono": 4400.0,
    "type": "Cohort",
-   "partner": "FISLL / NBA",
-   "theme": "Community / Economic Power,Black Founders,Education,Food"
+   "partner": [
+    "FISLL",
+    "NBA"
+   ],
+   "theme": [
+    "Community / Economic Power",
+    "Black Founders",
+    "Education",
+    "Food"
+   ]
   },
   {
    "cohort": "Newark Culture Heroes",
@@ -1089,15 +1111,20 @@ window.FF = {
    "q": "2021 Q2",
    "loc": "Newark",
    "status": "Completed",
-   "cap": 18302,
+   "cap": 18302.08,
    "founders": 7.0,
    "vols": 19.0,
    "sessions": 18.0,
    "hours": null,
-   "probono": 3960,
+   "probono": 3960.0,
    "type": "Cohort",
-   "partner": "Prudential",
-   "theme": "Culture,Black Founders"
+   "partner": [
+    "Prudential"
+   ],
+   "theme": [
+    "Culture",
+    "Black Founders"
+   ]
   },
   {
    "cohort": "Tulsa Titans",
@@ -1105,15 +1132,20 @@ window.FF = {
    "q": "2021 Q2",
    "loc": "Tulsa",
    "status": "Completed",
-   "cap": 18653,
+   "cap": 18653.12,
    "founders": 4.0,
    "vols": 20.0,
    "sessions": 6.0,
    "hours": null,
-   "probono": 1320,
+   "probono": 1320.0,
    "type": "Cohort",
-   "partner": "Prudential",
-   "theme": "Community / Economic Power,Black Founders"
+   "partner": [
+    "Prudential"
+   ],
+   "theme": [
+    "Community / Economic Power",
+    "Black Founders"
+   ]
   },
   {
    "cohort": "Philly Tech",
@@ -1121,15 +1153,20 @@ window.FF = {
    "q": "2021 Q2",
    "loc": "Philadelphia",
    "status": "Completed",
-   "cap": 20193,
+   "cap": 20193.0,
    "founders": 5.0,
    "vols": 29.0,
    "sessions": 36.0,
    "hours": null,
-   "probono": 7920,
+   "probono": 7920.0,
    "type": "Cohort",
-   "partner": "Comcast",
-   "theme": "Tech,Black Founders"
+   "partner": [
+    "Comcast"
+   ],
+   "theme": [
+    "Tech",
+    "Black Founders"
+   ]
   },
   {
    "cohort": "Scale Up 1",
@@ -1137,15 +1174,19 @@ window.FF = {
    "q": "2021 Q3",
    "loc": "National",
    "status": "Completed",
-   "cap": 0,
+   "cap": 0.0,
    "founders": 40.0,
    "vols": 30.0,
    "sessions": 79.0,
    "hours": null,
-   "probono": 17380,
+   "probono": 17380.0,
    "type": "Learning Series",
-   "partner": "Deloitte",
-   "theme": "Various"
+   "partner": [
+    "Deloitte"
+   ],
+   "theme": [
+    "Various"
+   ]
   },
   {
    "cohort": "Twin Cities Rising",
@@ -1153,15 +1194,21 @@ window.FF = {
    "q": "2021 Q4",
    "loc": "Twin Cities",
    "status": "Completed",
-   "cap": 18191,
+   "cap": 18191.32,
    "founders": 4.0,
    "vols": 9.0,
    "sessions": 9.0,
    "hours": null,
-   "probono": 1980,
+   "probono": 1980.0,
    "type": "Cohort",
-   "partner": "Prudential",
-   "theme": "Health & Wellness,Education,Female Founders"
+   "partner": [
+    "Prudential"
+   ],
+   "theme": [
+    "Health & Wellness",
+    "Education",
+    "Female Founders"
+   ]
   },
   {
    "cohort": "Louisville Renaissance",
@@ -1169,15 +1216,24 @@ window.FF = {
    "q": "2021 Q4",
    "loc": "Louisville",
    "status": "Completed",
-   "cap": 16000,
+   "cap": 16000.0,
    "founders": 5.0,
    "vols": 5.0,
    "sessions": 11.0,
    "hours": null,
-   "probono": 2420,
+   "probono": 2420.0,
    "type": "Cohort",
-   "partner": "FISLL / PNC,Surdna Foundation",
-   "theme": "Black Founders,Tech,Community / Economic Power,Health & Wellness"
+   "partner": [
+    "FISLL",
+    "PNC",
+    "Surdna Foundation"
+   ],
+   "theme": [
+    "Black Founders",
+    "Tech",
+    "Community / Economic Power",
+    "Health & Wellness"
+   ]
   },
   {
    "cohort": "Rooted in Food",
@@ -1185,15 +1241,20 @@ window.FF = {
    "q": "2022 Q1",
    "loc": "National",
    "status": "Completed",
-   "cap": 40000,
+   "cap": 40000.0,
    "founders": 5.0,
    "vols": 38.0,
    "sessions": 42.0,
    "hours": null,
-   "probono": 9240,
+   "probono": 9240.0,
    "type": "Cohort",
-   "partner": "PwC,Surdna Foundation",
-   "theme": "Food"
+   "partner": [
+    "PwC",
+    "Surdna Foundation"
+   ],
+   "theme": [
+    "Food"
+   ]
   },
   {
    "cohort": "Wellness Revolution",
@@ -1201,15 +1262,20 @@ window.FF = {
    "q": "2022 Q1",
    "loc": "National",
    "status": "Completed",
-   "cap": 20000,
+   "cap": 20000.0,
    "founders": 5.0,
    "vols": 4.0,
    "sessions": 9.0,
    "hours": null,
-   "probono": 1980,
+   "probono": 1980.0,
    "type": "Cohort",
-   "partner": "Prudential",
-   "theme": "Health & Wellness,Female Founders"
+   "partner": [
+    "Prudential"
+   ],
+   "theme": [
+    "Health & Wellness",
+    "Female Founders"
+   ]
   },
   {
    "cohort": "Glorious Juneteenth",
@@ -1217,15 +1283,20 @@ window.FF = {
    "q": "2022 Q2",
    "loc": "National",
    "status": "Completed",
-   "cap": 18000,
+   "cap": 18000.0,
    "founders": 6.0,
    "vols": 12.0,
    "sessions": 12.0,
    "hours": null,
-   "probono": 2640,
+   "probono": 2640.0,
    "type": "Cohort",
-   "partner": "Prudential",
-   "theme": "Black Founders,Community / Economic Power"
+   "partner": [
+    "Prudential"
+   ],
+   "theme": [
+    "Black Founders",
+    "Community / Economic Power"
+   ]
   },
   {
    "cohort": "DMV EJ",
@@ -1233,15 +1304,20 @@ window.FF = {
    "q": "2022 Q2",
    "loc": "DC / MD",
    "status": "Completed",
-   "cap": 20000,
+   "cap": 20000.0,
    "founders": 4.0,
    "vols": 11.0,
    "sessions": 11.0,
    "hours": null,
-   "probono": 2420,
+   "probono": 2420.0,
    "type": "Cohort",
-   "partner": "Meta/University of Maryland",
-   "theme": "Green / Environmental Justice"
+   "partner": [
+    "Meta",
+    "University of Maryland"
+   ],
+   "theme": [
+    "Green / Environmental Justice"
+   ]
   },
   {
    "cohort": "Scale Up 2",
@@ -1249,15 +1325,19 @@ window.FF = {
    "q": "2022 Q3",
    "loc": "National",
    "status": "Completed",
-   "cap": 0,
+   "cap": 0.0,
    "founders": 15.0,
    "vols": 10.0,
    "sessions": 48.0,
    "hours": null,
-   "probono": 10560,
+   "probono": 10560.0,
    "type": "Learning Series",
-   "partner": "Deloitte",
-   "theme": "Various"
+   "partner": [
+    "Deloitte"
+   ],
+   "theme": [
+    "Various"
+   ]
   },
   {
    "cohort": "Louisville Triumphant 3",
@@ -1265,15 +1345,26 @@ window.FF = {
    "q": "2022 Q4",
    "loc": "Louisville",
    "status": "Completed",
-   "cap": 20000,
+   "cap": 20000.0,
    "founders": 5.0,
    "vols": 36.0,
    "sessions": 58.0,
    "hours": null,
-   "probono": 12760,
+   "probono": 12760.0,
    "type": "Cohort",
-   "partner": "FISLL / PwC / Amplify,Render",
-   "theme": "Black Founders,Education,Food,Tech,Health & Wellness"
+   "partner": [
+    "FISLL",
+    "PwC",
+    "Amplify",
+    "Render"
+   ],
+   "theme": [
+    "Black Founders",
+    "Education",
+    "Food",
+    "Tech",
+    "Health & Wellness"
+   ]
   },
   {
    "cohort": "Louisville Triumphant 3 - Amplify Learning Series",
@@ -1281,15 +1372,25 @@ window.FF = {
    "q": "2022 Q4",
    "loc": "Louisville",
    "status": "Completed",
-   "cap": 0,
+   "cap": 0.0,
    "founders": 4.0,
    "vols": 0,
    "sessions": 0,
    "hours": 30.0,
-   "probono": 0,
+   "probono": 0.0,
    "type": "Learning Series",
-   "partner": "FISLL / PwC / Amplify",
-   "theme": "Black Founders,Education,Food,Tech,Health & Wellness"
+   "partner": [
+    "FISLL",
+    "PwC",
+    "Amplify"
+   ],
+   "theme": [
+    "Black Founders",
+    "Education",
+    "Food",
+    "Tech",
+    "Health & Wellness"
+   ]
   },
   {
    "cohort": "Black Veterans",
@@ -1297,15 +1398,20 @@ window.FF = {
    "q": "2023 Q1",
    "loc": "National",
    "status": "Completed",
-   "cap": 18000,
+   "cap": 18000.0,
    "founders": 4.0,
    "vols": 23.0,
    "sessions": 38.0,
    "hours": null,
-   "probono": 8360,
+   "probono": 8360.0,
    "type": "Cohort",
-   "partner": "Prudential",
-   "theme": "Veteran Founders,Black Founders"
+   "partner": [
+    "Prudential"
+   ],
+   "theme": [
+    "Veteran Founders",
+    "Black Founders"
+   ]
   },
   {
    "cohort": "Indigenous Creative",
@@ -1313,15 +1419,20 @@ window.FF = {
    "q": "2023 Q2",
    "loc": "National",
    "status": "Completed",
-   "cap": 20000,
+   "cap": 20000.0,
    "founders": 4.0,
    "vols": 33.0,
    "sessions": 10.0,
    "hours": null,
-   "probono": 2200,
+   "probono": 2200.0,
    "type": "Cohort",
-   "partner": "PwC",
-   "theme": "Indigenous ,Culture"
+   "partner": [
+    "PwC"
+   ],
+   "theme": [
+    "Indigenous",
+    "Culture"
+   ]
   },
   {
    "cohort": "Pru23-Black Wealth Futures",
@@ -1329,15 +1440,26 @@ window.FF = {
    "q": "2023 Q2",
    "loc": "National",
    "status": "Completed",
-   "cap": 18000,
+   "cap": 18000.0,
    "founders": 4.0,
    "vols": 9.0,
    "sessions": 9.0,
    "hours": null,
-   "probono": 1980,
+   "probono": 1980.0,
    "type": "Cohort",
-   "partner": "Prudential",
-   "theme": "Workforce,Atlanta,Newark,Jacksonville,Chicago,Twin Cities,Detroit,Hartford"
+   "partner": [
+    "Prudential"
+   ],
+   "theme": [
+    "Workforce",
+    "Atlanta",
+    "Newark",
+    "Jacksonville",
+    "Chicago",
+    "Twin Cities",
+    "Detroit",
+    "Hartford"
+   ]
   },
   {
    "cohort": "Southeast EJ",
@@ -1345,15 +1467,20 @@ window.FF = {
    "q": "2023 Q4",
    "loc": "SE Regional",
    "status": "Completed",
-   "cap": 20000,
+   "cap": 20000.0,
    "founders": 4.0,
    "vols": 0,
    "sessions": 0,
    "hours": null,
-   "probono": 0,
+   "probono": 0.0,
    "type": "Cohort",
-   "partner": "Meta/University of Maryland",
-   "theme": "Green / Environmental Justice"
+   "partner": [
+    "Meta",
+    "University of Maryland"
+   ],
+   "theme": [
+    "Green / Environmental Justice"
+   ]
   },
   {
    "cohort": "Indigenous EJ",
@@ -1361,15 +1488,22 @@ window.FF = {
    "q": "2023 Q4",
    "loc": "National",
    "status": "Pending",
-   "cap": 20000,
+   "cap": 20000.0,
    "founders": 0,
    "vols": 0,
    "sessions": 9.0,
    "hours": null,
-   "probono": 1980,
+   "probono": 1980.0,
    "type": "Cohort",
-   "partner": "Meta/University of Maryland",
-   "theme": "Green / Environmental Justice,Indigenous ,Female Founders"
+   "partner": [
+    "Meta",
+    "University of Maryland"
+   ],
+   "theme": [
+    "Green / Environmental Justice",
+    "Indigenous",
+    "Female Founders"
+   ]
   },
   {
    "cohort": "Pru23 - AAPI New Longevity",
@@ -1377,15 +1511,19 @@ window.FF = {
    "q": "2024 Q1",
    "loc": "National",
    "status": "Completed",
-   "cap": 18000,
+   "cap": 18000.0,
    "founders": 4.0,
    "vols": 26.0,
    "sessions": 13.0,
    "hours": null,
-   "probono": 2860,
+   "probono": 2860.0,
    "type": "Cohort",
-   "partner": "Prudential",
-   "theme": "AAPI"
+   "partner": [
+    "Prudential"
+   ],
+   "theme": [
+    "AAPI"
+   ]
   },
   {
    "cohort": "Scale Up 3",
@@ -1393,15 +1531,19 @@ window.FF = {
    "q": "2024 Q1",
    "loc": "National",
    "status": "Completed",
-   "cap": 0,
+   "cap": 0.0,
    "founders": 0,
    "vols": 0,
    "sessions": 0,
    "hours": null,
-   "probono": 0,
+   "probono": 0.0,
    "type": "Learning Series",
-   "partner": "Deloitte",
-   "theme": "Various"
+   "partner": [
+    "Deloitte"
+   ],
+   "theme": [
+    "Various"
+   ]
   },
   {
    "cohort": "Deloitte Platform",
@@ -1409,15 +1551,17 @@ window.FF = {
    "q": "2024 Q1",
    "loc": "National",
    "status": "Pending",
-   "cap": 0,
+   "cap": 0.0,
    "founders": 0,
    "vols": 0,
    "sessions": 0,
    "hours": null,
-   "probono": 0,
+   "probono": 0.0,
    "type": "Cohort",
-   "partner": "Deloitte",
-   "theme": ""
+   "partner": [
+    "Deloitte"
+   ],
+   "theme": []
   },
   {
    "cohort": "PwC - Procurement Pathways",
@@ -1425,15 +1569,20 @@ window.FF = {
    "q": "2024 Q1",
    "loc": "Louisville",
    "status": "Completed",
-   "cap": 40000,
+   "cap": 40000.0,
    "founders": 4.0,
    "vols": 33.0,
    "sessions": 11.0,
    "hours": null,
-   "probono": 2420,
+   "probono": 2420.0,
    "type": "Cohort",
-   "partner": "PwC,Render",
-   "theme": "Procurement"
+   "partner": [
+    "PwC",
+    "Render"
+   ],
+   "theme": [
+    "Procurement"
+   ]
   },
   {
    "cohort": "Scale Up 4",
@@ -1441,15 +1590,17 @@ window.FF = {
    "q": "2024 Q1",
    "loc": "National",
    "status": "Completed",
-   "cap": 0,
+   "cap": 0.0,
    "founders": 0,
    "vols": 0,
    "sessions": 0,
    "hours": null,
-   "probono": 0,
+   "probono": 0.0,
    "type": "Learning Series",
-   "partner": "Deloitte",
-   "theme": ""
+   "partner": [
+    "Deloitte"
+   ],
+   "theme": []
   },
   {
    "cohort": "PwC - Sustainable Bronx",
@@ -1457,15 +1608,19 @@ window.FF = {
    "q": "2024 Q2",
    "loc": "Mid Atlantic",
    "status": "Completed",
-   "cap": 20000,
+   "cap": 20000.0,
    "founders": 4.0,
    "vols": 15.0,
    "sessions": 0,
    "hours": null,
-   "probono": 0,
+   "probono": 0.0,
    "type": "Cohort",
-   "partner": "PwC",
-   "theme": "Sustainability"
+   "partner": [
+    "PwC"
+   ],
+   "theme": [
+    "Sustainability"
+   ]
   },
   {
    "cohort": "Pru23 - MLK Pitch",
@@ -1473,15 +1628,19 @@ window.FF = {
    "q": "2025 Q1",
    "loc": "Mid Atlantic",
    "status": "Completed",
-   "cap": 18000,
+   "cap": 18000.0,
    "founders": 4.0,
    "vols": 25.0,
    "sessions": 8.0,
    "hours": 8.0,
-   "probono": 1760,
+   "probono": 1760.0,
    "type": "Cohort",
-   "partner": "Prudential",
-   "theme": "Sustainability"
+   "partner": [
+    "Prudential"
+   ],
+   "theme": [
+    "Sustainability"
+   ]
   }
  ],
  "sprint_totals": {
@@ -1583,13 +1742,183 @@ window.FF = {
  },
  "pitchprov": [
   {
+   "date": "12/16/24",
+   "y": 2024,
+   "venue": "Ginjan Cafe @ Brooklyn",
+   "n": 22,
+   "audience": "Founders and stakeholders",
+   "roles": [
+    {
+     "label": "Community stakeholder",
+     "n": 11
+    },
+    {
+     "label": "Founder",
+     "n": 8
+    },
+    {
+     "label": "Philanthropic stakeholder",
+     "n": 3
+    },
+    {
+     "label": "Investor",
+     "n": 3
+    },
+    {
+     "label": "Corporate stakeholder",
+     "n": 2
+    }
+   ],
+   "comments": 17,
+   "questions": [
+    {
+     "key": "invite",
+     "short": "Would invite a friend",
+     "text": "How likely are you to invite a friend to another PitchProv?",
+     "n": 21,
+     "mean": 4.86,
+     "dist": [
+      0,
+      0,
+      0,
+      3,
+      18
+     ]
+    },
+    {
+     "key": "community",
+     "short": "Sense of community",
+     "text": "Attending PitchProv increased my sense of community",
+     "n": 22,
+     "mean": 4.27,
+     "dist": [
+      0,
+      0,
+      3,
+      10,
+      9
+     ]
+    },
+    {
+     "key": "confidence",
+     "short": "Communication confidence",
+     "text": "Attending PitchProv increased my confidence in my communication skills",
+     "n": 22,
+     "mean": 4.05,
+     "dist": [
+      0,
+      0,
+      7,
+      7,
+      8
+     ]
+    },
+    {
+     "key": "ecosystem",
+     "short": "Commitment to the ecosystem",
+     "text": "Participating increased my commitment to supporting entrepreneurial ecosystems",
+     "n": 22,
+     "mean": 4.55,
+     "dist": [
+      0,
+      1,
+      1,
+      5,
+      15
+     ]
+    }
+   ]
+  },
+  {
+   "date": "3/21/25",
+   "y": 2025,
+   "venue": "Diversitech @ Philly",
+   "n": 31,
+   "audience": "Founders and stakeholders",
+   "roles": [
+    {
+     "label": "Founder",
+     "n": 16
+    },
+    {
+     "label": "Community Stakeholder",
+     "n": 9
+    },
+    {
+     "label": "Corporate Stakeholder",
+     "n": 6
+    },
+    {
+     "label": "Investor",
+     "n": 1
+    }
+   ],
+   "comments": 19,
+   "questions": [
+    {
+     "key": "invite",
+     "short": "Would invite a friend",
+     "text": "How likely are you to invite a friend to another PitchProv?",
+     "n": 31,
+     "mean": 4.81,
+     "dist": [
+      0,
+      0,
+      0,
+      6,
+      25
+     ]
+    },
+    {
+     "key": "community",
+     "short": "Sense of community",
+     "text": "Attending PitchProv increased my sense of community",
+     "n": 31,
+     "mean": 4.84,
+     "dist": [
+      0,
+      0,
+      1,
+      3,
+      27
+     ]
+    },
+    {
+     "key": "confidence",
+     "short": "Communication confidence",
+     "text": "Attending PitchProv increased my confidence in my communication skills",
+     "n": 31,
+     "mean": 4.65,
+     "dist": [
+      0,
+      0,
+      2,
+      7,
+      22
+     ]
+    },
+    {
+     "key": "ecosystem",
+     "short": "Commitment to the ecosystem",
+     "text": "Participating increased my commitment to supporting entrepreneurial ecosystems",
+     "n": 30,
+     "mean": 4.63,
+     "dist": [
+      0,
+      0,
+      1,
+      9,
+      20
+     ]
+    }
+   ]
+  },
+  {
    "date": "11/1/25",
    "y": 2025,
    "venue": "BUILD NYC @ LIU BK",
    "n": 29,
-   "audience": "Students",
-   "invite": 3.31,
-   "invite_n": 29,
+   "audience": "Students and youth",
    "roles": [
     {
      "label": "Sophomore",
@@ -1603,67 +1932,64 @@ window.FF = {
      "label": "Junior",
      "n": 8
     }
-   ]
-  },
-  {
-   "date": "12/16/24",
-   "y": 2024,
-   "venue": "Ginjan Cafe @ Brooklyn",
-   "n": 22,
-   "audience": "Founders and stakeholders",
-   "invite": 4.86,
-   "invite_n": 21,
-   "roles": [
+   ],
+   "comments": 2,
+   "questions": [
     {
-     "label": "Community stakeholder",
-     "n": 8
+     "key": "invite",
+     "short": "Would invite a friend",
+     "text": "How likely are you to invite a friend to another PitchProv?",
+     "n": 29,
+     "mean": 3.31,
+     "dist": [
+      2,
+      5,
+      10,
+      6,
+      6
+     ]
     },
     {
-     "label": "Founder",
-     "n": 6
+     "key": "community",
+     "short": "Sense of community",
+     "text": "Attending PitchProv increased my sense of community",
+     "n": 29,
+     "mean": 3.62,
+     "dist": [
+      0,
+      0,
+      15,
+      10,
+      4
+     ]
     },
     {
-     "label": "Philanthropic stakeholder",
-     "n": 2
+     "key": "confidence",
+     "short": "Communication confidence",
+     "text": "Attending PitchProv increased my confidence in my communication skills",
+     "n": 29,
+     "mean": 3.76,
+     "dist": [
+      0,
+      2,
+      9,
+      12,
+      6
+     ]
     },
     {
-     "label": "Corporate stakeholder,Philanthropic stakeholder,Community stakeholder",
-     "n": 1
-    },
-    {
-     "label": "Investor",
-     "n": 1
-    }
-   ]
-  },
-  {
-   "date": "3/21/25",
-   "y": 2025,
-   "venue": "Diversitech @ Philly",
-   "n": 31,
-   "audience": "Founders and stakeholders",
-   "invite": 4.81,
-   "invite_n": 31,
-   "roles": [
-    {
-     "label": "Founder",
-     "n": 11
-    },
-    {
-     "label": "Corporate Stakeholder",
-     "n": 5
-    },
-    {
-     "label": "Community Stakeholder",
-     "n": 5
-    },
-    {
-     "label": "Founder,Community Stakeholder",
-     "n": 3
-    },
-    {
-     "label": "Founder,Investor,Community Stakeholder",
-     "n": 1
+     "key": "ecosystem",
+     "short": "Commitment to the ecosystem",
+     "text": "Participating increased my commitment to supporting entrepreneurial ecosystems",
+     "n": 29,
+     "mean": 3.79,
+     "dist": [
+      0,
+      3,
+      8,
+      10,
+      8
+     ]
     }
    ]
   },
@@ -1672,9 +1998,7 @@ window.FF = {
    "y": 2026,
    "venue": "Young Adult Day @ JobsFirstNYC",
    "n": 15,
-   "audience": "Founders and stakeholders",
-   "invite": 4.4,
-   "invite_n": 15,
+   "audience": "Students and youth",
    "roles": [
     {
      "label": "Other",
@@ -1688,7 +2012,88 @@ window.FF = {
      "label": "Freshman",
      "n": 2
     }
+   ],
+   "comments": 9,
+   "questions": [
+    {
+     "key": "invite",
+     "short": "Would invite a friend",
+     "text": "How likely are you to invite a friend to another PitchProv?",
+     "n": 15,
+     "mean": 4.4,
+     "dist": [
+      0,
+      0,
+      3,
+      3,
+      9
+     ]
+    },
+    {
+     "key": "community",
+     "short": "Sense of community",
+     "text": "Attending PitchProv increased my sense of community",
+     "n": 15,
+     "mean": 4.2,
+     "dist": [
+      0,
+      0,
+      1,
+      10,
+      4
+     ]
+    },
+    {
+     "key": "confidence",
+     "short": "Communication confidence",
+     "text": "Attending PitchProv increased my confidence in my communication skills",
+     "n": 15,
+     "mean": 4.33,
+     "dist": [
+      0,
+      0,
+      3,
+      4,
+      8
+     ]
+    },
+    {
+     "key": "ecosystem",
+     "short": "Commitment to the ecosystem",
+     "text": "Participating increased my commitment to supporting entrepreneurial ecosystems",
+     "n": 15,
+     "mean": 4.33,
+     "dist": [
+      0,
+      0,
+      1,
+      8,
+      6
+     ]
+    }
    ]
+  }
+ ],
+ "pitchprov_questions": [
+  {
+   "key": "invite",
+   "short": "Would invite a friend",
+   "text": "How likely are you to invite a friend to another PitchProv?"
+  },
+  {
+   "key": "community",
+   "short": "Sense of community",
+   "text": "Attending PitchProv increased my sense of community"
+  },
+  {
+   "key": "confidence",
+   "short": "Communication confidence",
+   "text": "Attending PitchProv increased my confidence in my communication skills"
+  },
+  {
+   "key": "ecosystem",
+   "short": "Commitment to the ecosystem",
+   "text": "Participating increased my commitment to supporting entrepreneurial ecosystems"
   }
  ],
  "census": {

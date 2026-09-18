@@ -41,7 +41,8 @@ reaching `data.js`. Escalate where that file lives; do not route it through this
 
 ## Self-serve features
 
-  Crossfilter   click any bar, donut segment, trend point or matrix cell to filter everything
+  Crossfilter   click any bar, donut segment, bubble, trend point or matrix cell
+                filters award rows, cohorts and events, each against its own dataset
   Cross-tab     Explore page pivots any two of 16 dimensions against each other
   Deep links    page, year range and every filter encode into the URL
   Theme         light by default, dark by toggle, remembered per browser
@@ -89,3 +90,11 @@ works. Percentages below 5 founders are suppressed in the interface, but the row
 are readable in data.js, so that suppression is a courtesy rather than a control. If the
 demographic detail ever needs to be genuinely restricted, the lever is access-controlled
 hosting, not the interface. Cloudflare Pages with Access covers it on the free tier.
+
+## Correction carried in the product
+
+The Phase 1 note records the PitchProv confidence question as unanswered. It is not. All four
+rated questions are answered on all four events; the answers are words ("Strongly agree"), not
+digits, so a numeric-only read reports them empty. The dashboard shows the full distribution,
+mean and n for every question and event, split by audience because two events served students
+and two served founders.

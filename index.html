@@ -12,6 +12,7 @@
   --ok:#0E8AA3; --warn:#A8720A; --no:#BE1D52;
   --ok-w:#E4F3F6; --warn-w:#F7F0E1; --no-w:#FBE8EE;
   --s1:#5B3DF5; --s2:#0E8AA3; --s3:#A8720A; --s4:#BE1D52; --s5:#8796AE;
+  --lk2:#D972A0; --lk4:#6FB9C9;
   --hatch:#C3CDDC;
   --shadow:0 1px 2px rgba(15,23,42,.05), 0 12px 28px -14px rgba(15,23,42,.16);
   --shadow-lg:0 2px 6px rgba(15,23,42,.06), 0 24px 48px -20px rgba(15,23,42,.24);
@@ -25,6 +26,7 @@
   --ok:#35A5BC; --warn:#C08A1A; --no:#DC5580;
   --ok-w:#0C2B33; --warn-w:#2B2109; --no-w:#33121F;
   --s1:#8B72FF; --s2:#35A5BC; --s3:#C08A1A; --s4:#DC5580; --s5:#6B7C99;
+  --lk2:#8E3D58; --lk4:#2A6E7E;
   --hatch:#2B3A59;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 32px -16px rgba(0,0,0,.8);
   --shadow-lg:0 2px 8px rgba(0,0,0,.5), 0 28px 56px -22px rgba(0,0,0,.9);
@@ -272,14 +274,34 @@ var DIMS = {
   alive:    {label:'Still in business'},
   partner:  {label:'Partner', multi:true},
   cohort:   {label:'Cohort'},
-  y:        {label:'Year'}
+  y:        {label:'Year'},
+  /* Cohort and event dimensions. These filter FF.sprint and FF.pitchprov rather
+     than the award table, so they live in the same filter state but resolve
+     against a different list. */
+  sp_type:    {label:'Cohort type'},
+  sp_status:  {label:'Cohort status'},
+  sp_theme:   {label:'Cohort theme',  multi:true},
+  sp_partner: {label:'Delivery partner', multi:true},
+  sp_loc:     {label:'Cohort location'},
+  pp_audience:{label:'Event audience'},
+  pp_venue:   {label:'Event'},
+  pp_role:    {label:'Attendee role'}
 };
+var SPRINT_DIMS={sp_type:'type', sp_status:'status', sp_theme:'theme',
+                 sp_partner:'partner', sp_loc:'loc'};
+var PP_DIMS={pp_audience:'audience', pp_venue:'venue'};
+var LIKERT_LABEL=['Strongly disagree','Disagree','Neutral','Agree','Strongly agree'];
+var LIKERT_COLOR=['var(--s4)','var(--lk2)','var(--s5)','var(--lk4)','var(--s2)'];
 function dimName(d,v){
   var D=DIMS[d]; return (D && D.names && D.names[v]) ? D.names[v] : String(v);
 }
 
 /* ===================== state ===================== */
-var YEARS = ROWS.map(function(r){return r.y;}).filter(Boolean);
+var YEARS = ROWS.map(function(r){return r.y;})
+  .concat(FF.sprint.map(function(r){return r.y;}))
+  .concat(FF.pitchprov.map(function(r){return r.y;}))
+  .concat(FF.impact_series[0].points.map(function(p){return p.year;}))
+  .filter(Boolean);
 var Y0=Math.min.apply(null,YEARS), Y1=Math.max.apply(null,YEARS);
 var st = {page:'overview', from:Y0, to:Y1, f:{}, xa:'city', xb:'race', measure:'founders'};
 
@@ -323,6 +345,34 @@ function surviving(rs){
   return {yes:yes, total:keys.length};
 }
 
+/* Filter an arbitrary list (cohorts, events) with the same filter state. */
+function applyGeneric(list, map, exceptDim, yearField){
+  return list.filter(function(r){
+    if(yearField && r[yearField]!=null && (r[yearField]<st.from||r[yearField]>st.to)) return false;
+    for(var d in map){
+      if(d===exceptDim) continue;
+      var sset=st.f[d]; if(!sset||!sset.size) continue;
+      var v=r[map[d]];
+      if(Array.isArray(v)){
+        var hit=false; for(var j=0;j<v.length;j++) if(sset.has(v[j])){ hit=true; break; }
+        if(!hit) return false;
+      } else if(!sset.has(v)) return false;
+    }
+    return true;
+  });
+}
+/* Count rows (or a measure) of an arbitrary list by a field. */
+function groupList(list, field, measure){
+  var m={};
+  list.forEach(function(r){
+    var v=r[field];
+    var vals=Array.isArray(v)?v:(v===''||v==null?[]:[v]);
+    vals.forEach(function(x){ m[x]=(m[x]||0)+(measure?measure(r):1); });
+  });
+  return Object.keys(m).map(function(k){ return {v:k,label:k,n:m[k]}; })
+    .sort(function(a,b){ return b.n-a.n || a.label.localeCompare(b.label); });
+}
+
 /* Group rows by a dimension, counting distinct founders. */
 function group(dim, rs, opts){
   opts=opts||{};
@@ -353,8 +403,12 @@ var SERIES=['var(--s1)','var(--s2)','var(--s3)','var(--s4)','var(--s5)'];
 function bars(dim, rs, opts){
   opts=opts||{};
   var data=group(dim, rs, {top:opts.top, blank:opts.blank});
+  return barsData(dim, data, opts, opts.pctOf!=null?opts.pctOf:founders(rs));
+}
+function barsData(dim, data, opts, totalIn){
+  opts=opts||{};
   if(!data.length) return '<div class="empty">Nothing matches the current filters.</div>';
-  var total=opts.pctOf!=null ? opts.pctOf : founders(rs);
+  var total=totalIn!=null ? totalIn : data.reduce(function(a,r){ return a+r.n; },0);
   var W=340, rh=opts.rh||26, PADL=opts.padl||124, PADR=58;
   var max=Math.max.apply(null,data.map(function(r){return r.n;}))||1;
   var inner=W-PADL-PADR, o=[svgOpen(W, data.length*rh, DIMS[dim].label)];
@@ -363,16 +417,17 @@ function bars(dim, rs, opts){
     var fit=Math.max(8,Math.floor((PADL-10)/6.0));
     var lab=r.label.length>fit ? r.label.slice(0,fit-1)+'\u2026' : r.label;
     var pct = total>=1 ? Math.round(100*r.n/total) : 0;
-    var show = r.n>=5 ? pct+'%' : 'n<5';
+    var show = opts.unit ? '' : (r.n>=5 ? pct+'%' : 'n<5');
     o.push('<text x="'+(PADL-9)+'" y="'+(y+rh/2+3.5)+'" text-anchor="end" font-size="11" '+
       'fill="var(--text-2)" opacity="'+op+'">'+esc(lab)+'</text>');
-    o.push('<rect class="mk" data-d="'+dim+'" data-v="'+esc(r.v)+'" data-t="'+
-      esc(r.label+'\n'+r.n+(r.n===1?' founder  ':' founders  ')+show)+'" x="'+PADL+'" y="'+(y+5)+'" width="'+w+
+    var unit=opts.unit||(r.n===1?' founder':' founders');
+    o.push('<'+(opts.noclick?'rect':'rect class="mk"')+' data-d="'+dim+'" data-v="'+esc(r.v)+
+      '" data-t="'+esc(r.label+'\n'+r.n+unit+(opts.unit?'':'  '+show))+'" x="'+PADL+'" y="'+(y+5)+'" width="'+w+
       '" height="'+(rh-12)+'" rx="'+((rh-12)/2)+'" fill="'+(opts.color||'var(--s1)')+
       '" opacity="'+op+'"/>');
     o.push('<text x="'+(PADL+w+8)+'" y="'+(y+rh/2+3.5)+'" font-size="10.5" fill="var(--text-2)" '+
       'font-family="JetBrains Mono, monospace" opacity="'+op+'">'+r.n+
-      '<tspan fill="var(--text-3)">  '+show+'</tspan></text>');
+      (show?'<tspan fill="var(--text-3)">  '+show+'</tspan>':'')+'</text>');
   });
   return o.join('')+'</svg>';
 }
@@ -679,27 +734,138 @@ apply_: function(){
 },
 
 program: function(){
-  var rs=apply(), sp=FF.sprint.filter(function(r){
-    return r.y==null||(r.y>=st.from&&r.y<=st.to); });
+  var rs=apply();
+  var sp=applyGeneric(FF.sprint, SPRINT_DIMS, null, 'y');
+  var pp=applyGeneric(FF.pitchprov, PP_DIMS, null, 'y');
+  var sum=function(list,k){ return list.reduce(function(a,r){ return a+(r[k]||0); },0); };
+  var ppN=sum(pp,'n');
+
+  /* ---- cohort timeline: when, how big, how much volunteer time ---- */
+  function cohortScatter(list){
+    if(!list.length) return '<div class="empty">No cohorts match the current filters.</div>';
+    var W=660,H=260,PADL=52,PADR=18,PADT=14,PADB=34;
+    var ys=list.map(function(r){ return r.y; }).filter(Boolean);
+    var y0=Math.min.apply(null,ys), y1=Math.max.apply(null,ys);
+    var qn=function(r){ var m=/Q(\d)/.exec(r.q||''); return m?(+m[1]-1)/4:0; };
+    var tmin=y0, tmax=y1+1;
+    var maxPb=Math.max.apply(null,list.map(function(r){ return r.probono; }))||1;
+    var top=Math.ceil(maxPb/5000)*5000||1;
+    var maxF=Math.max.apply(null,list.map(function(r){ return r.founders; }))||1;
+    var iw=W-PADL-PADR, ih=H-PADT-PADB;
+    var X=function(r){ return PADL+((r.y+qn(r))-tmin)/(tmax-tmin)*iw; };
+    var Y=function(v){ return PADT+ih-(v/top)*ih; };
+    var o=[svgOpen(W,H,'Cohorts over time')];
+    [0,.5,1].forEach(function(k){
+      var y=PADT+ih-k*ih;
+      o.push('<line x1="'+PADL+'" x2="'+(W-PADR)+'" y1="'+y+'" y2="'+y+
+        '" stroke="var(--line)" stroke-width="1"/>');
+      o.push('<text x="'+(PADL-8)+'" y="'+(y+3.5)+'" text-anchor="end" font-size="9.5" '+
+        'fill="var(--text-3)" font-family="JetBrains Mono, monospace">'+usd(top*k)+'</text>');
+    });
+    for(var yy=tmin; yy<=y1; yy++){
+      var x=PADL+(yy-tmin)/(tmax-tmin)*iw;
+      o.push('<text x="'+(x+iw/(tmax-tmin)/2)+'" y="'+(PADT+ih+16)+'" text-anchor="middle" '+
+        'font-size="9.5" fill="var(--text-3)" font-family="JetBrains Mono, monospace">\u2019'+
+        String(yy).slice(2)+'</text>');
+    }
+    list.slice().sort(function(a,b){ return b.founders-a.founders; }).forEach(function(r){
+      if(!r.y) return;
+      var rad=5+Math.sqrt(r.founders/maxF)*16;
+      var col=r.type==='Cohort'?'var(--s1)':'var(--s3)';
+      var op=dimHasSel('sp_type')?(isSel('sp_type',r.type)?.95:.25):.8;
+      o.push('<circle class="mk" data-d="sp_type" data-v="'+esc(r.type)+'" data-t="'+
+        esc(r.cohort+'\n'+r.q+'  '+r.loc+'\n'+r.founders+' founders, '+r.vols+' volunteers\n'+
+            usdFull(r.cap)+' capital, '+usdFull(r.probono)+' pro bono')+
+        '" cx="'+X(r)+'" cy="'+Y(r.probono)+'" r="'+rad.toFixed(1)+'" fill="'+col+
+        '" opacity="'+op+'" stroke="var(--card)" stroke-width="1.5"/>');
+    });
+    return o.join('')+'</svg>'+
+      '<div class="legend"><span><i style="background:var(--s1)"></i>Cohort</span>'+
+      '<span><i style="background:var(--s3)"></i>Learning series</span>'+
+      '<span style="color:var(--text-3)">Bubble size is founders served</span></div>';
+  }
+
+  /* ---- Likert distribution, diverging around neutral ---- */
+  function likertRows(qKey, list){
+    if(!list.length) return '<div class="empty">No events match.</div>';
+    var W=330, rh=38, PADL=6, o=[svgOpen(W, list.length*rh, 'Responses')];
+    list.forEach(function(e,i){
+      var q=e.questions.filter(function(x){ return x.key===qKey; })[0];
+      if(!q || !q.n) return;
+      var y=i*rh, bw=W-PADL-52, x=PADL, tot=q.n;
+      var op=dimHasSel('pp_venue')?(isSel('pp_venue',e.venue)?1:.3):1;
+      o.push('<text x="'+PADL+'" y="'+(y+11)+'" font-size="10" fill="var(--text-2)" '+
+        'opacity="'+op+'">'+esc(e.venue.length>26?e.venue.slice(0,25)+'\u2026':e.venue)+'</text>');
+      q.dist.forEach(function(n,k){
+        if(!n) return;
+        var w=(n/tot)*bw;
+        o.push('<rect class="mk" data-d="pp_venue" data-v="'+esc(e.venue)+'" data-t="'+
+          esc(e.venue+'\n'+LIKERT_LABEL[k]+': '+n+' of '+tot)+
+          '" x="'+x+'" y="'+(y+16)+'" width="'+Math.max(1,w-1)+'" height="14" rx="3" fill="'+
+          LIKERT_COLOR[k]+'" opacity="'+op+'"/>');
+        x+=w;
+      });
+      o.push('<text x="'+(W-48)+'" y="'+(y+27)+'" font-size="11" fill="var(--text)" '+
+        'font-family="JetBrains Mono, monospace" opacity="'+op+'">'+q.mean.toFixed(2)+
+        '<tspan fill="var(--text-3)" font-size="9">/5</tspan></text>');
+      o.push('<text x="'+(W-4)+'" y="'+(y+11)+'" text-anchor="end" font-size="9" '+
+        'fill="var(--text-3)" font-family="JetBrains Mono, monospace" opacity="'+op+
+        '">n='+tot+'</text>');
+    });
+    return o.join('')+'</svg>';
+  }
+
+  var qCards=FF.pitchprov_questions.map(function(q){
+    return card({span:'c6', title:q.short, cap:esc(q.text),
+      body:likertRows(q.key, pp)});
+  }).join('');
+
+  var themeData=groupList(sp,'theme'), partnerData=groupList(sp,'partner');
+  var locData=groupList(sp,'loc'), typeData=groupList(sp,'type');
+  var roleAgg={};
+  pp.forEach(function(e){ e.roles.forEach(function(r){
+    roleAgg[r.label]=(roleAgg[r.label]||0)+r.n; }); });
+  var roleData=Object.keys(roleAgg).map(function(k){
+    return {v:k,label:k,n:roleAgg[k]}; }).sort(function(a,b){ return b.n-a.n; });
+
   return '<div class="kpis">'+
-    kpi({label:'Cohorts and series', value:nf(FF.sprint_totals.cohorts), color:'var(--s1)',
-         hint:FF.sprint_totals.founders+' founder seats'})+
-    kpi({label:'Sessions delivered', value:nf(FF.sprint_totals.sessions), color:'var(--s2)',
-         hint:FF.sprint_totals.volunteers+' volunteer engagements'})+
-    kpi({label:'Sprint pro bono', value:usdFull(FF.sprint_totals.probono), color:'var(--s3)',
-         hint:'Volunteer list says '+usdFull(FF.volunteers.probono)})+
-    kpi({label:'Volunteers on file', value:nf(FF.volunteers.n), color:'var(--s4)',
-         hint:FF.volunteers.hours+' hours, filled on '+FF.volunteers.hours_filled+' rows'})+
-    kpi({label:'PitchProv responses',
-         value:nf(FF.pitchprov.reduce(function(a,e){return a+e.n;},0)), color:'var(--s5)',
-         hint:FF.pitchprov.length+' events, no email captured'})+
+    kpi({label:'Cohorts and series', value:nf(sp.length), color:'var(--s1)',
+         hint:sum(sp,'founders')+' founder seats, '+sum(sp,'sessions')+' sessions'})+
+    kpi({label:'Pro bono delivered', value:usdFull(sum(sp,'probono')), color:'var(--s3)',
+         hint:sum(sp,'vols')+' volunteer engagements'})+
+    kpi({label:'Sprint capital', value:usdFull(sum(sp,'cap')), color:'var(--s2)',
+         hint:'Sprint programme only, not total capital'})+
+    kpi({label:'PitchProv responses', value:nf(ppN), color:'var(--s4)',
+         hint:pp.length+' events, '+sum(pp,'comments')+' written comments'})+
+    kpi({label:'Awards in selection', value:usdFull(capital(rs)), color:'var(--s5)',
+         hint:rs.length+' awards to '+founders(rs)+' founders'})+
     '</div><div class="grid">'+
+
+    card({span:'c8', title:'Cohorts over time',
+      cap:'Each bubble is one cohort. Height is pro bono value delivered, size is founders served. '+
+          'Click a bubble to filter by its type.',
+      body:cohortScatter(sp)})+
+    card({span:'c4', title:'Type and status', cap:'Click to filter every cohort chart.',
+      body:barsData('sp_type', typeData, {padl:112, color:'var(--s1)', unit:' cohorts'})+
+           '<div style="height:10px"></div>'+
+           barsData('sp_status', groupList(sp,'status'),
+             {padl:112, color:'var(--s2)', unit:' cohorts'})})+
+
+    card({span:'c4', title:'Cohort themes',
+      cap:'Several rows file a city here instead of a theme, which is a data entry issue, not a theme.',
+      body:barsData('sp_theme', themeData.slice(0,10), {padl:150, color:'var(--s2)', unit:' cohorts'})})+
+    card({span:'c4', title:'Delivery partners', cap:'Click to filter.',
+      body:barsData('sp_partner', partnerData.slice(0,10), {padl:130, color:'var(--s3)', unit:' cohorts'})})+
+    card({span:'c4', title:'Where cohorts ran', cap:'Click to filter.',
+      body:barsData('sp_loc', locData.slice(0,10), {padl:120, color:'var(--s4)', unit:' cohorts'})})+
+
     card({span:'c8', title:'Advising sessions facilitated',
       cap:'The Phase 1 note says advising is invisible. It is not. The trend is the story.',
       body:(function(){
         var pts=FF.impact_series.filter(function(s){
           return s.key==='Advising Sessions Facilitated';})[0].points
           .filter(function(p){return p.year>=st.from&&p.year<=st.to;});
+        if(!pts.length) return '<div class="empty">No years in range.</div>';
         var W=660,H=170,PADL=44,ih=H-26;
         var mx=Math.max.apply(null,pts.map(function(p){return p.v||0;}))||1;
         var top=Math.ceil(mx/50)*50||1, step=(W-PADL-14)/pts.length, bw=Math.min(34,step*.58);
@@ -713,8 +879,10 @@ program: function(){
         pts.forEach(function(p,i){
           var cx=PADL+step*i+step/2;
           if(p.v!=null){ var h=Math.max(3,(p.v/top)*ih);
-            o.push('<rect x="'+(cx-bw/2)+'" y="'+(ih-h)+'" width="'+bw+'" height="'+h+
-              '" rx="5" fill="var(--s3)"><title>'+p.year+': '+p.v+' sessions</title></rect>'); }
+            o.push('<rect class="mk" data-d="y" data-v="'+p.year+'" data-t="'+
+              esc(p.year+'\n'+p.v+' advising sessions')+'" x="'+(cx-bw/2)+'" y="'+(ih-h)+
+              '" width="'+bw+'" height="'+h+'" rx="5" fill="var(--s3)" opacity="'+
+              markOpacity('y',p.year)+'"/>'); }
           else { o.push('<rect x="'+(cx-bw/2)+'" y="'+(ih-3)+'" width="'+bw+
             '" height="3" rx="1.5" fill="var(--hatch)"><title>'+p.year+
             ': not recorded</title></rect>'); }
@@ -723,35 +891,32 @@ program: function(){
             String(p.year).slice(2)+'</text>'); });
         return o.join('')+'</svg>';
       })()})+
-    card({span:'c4', title:'Award programme', cap:'Click to filter.',
+    card({span:'c4', title:'Award programme',
+      cap:'From the grants table. Filters the award figures above and the awards chart below.',
       body:bars('purpose', apply('purpose'), {padl:150, color:'var(--s2)'})})+
-    card({span:'c12', title:'Sprint cohorts', cap:'Every cohort and learning series on record.',
-      body:'<div class="scroll"><table class="tbl"><thead><tr><th>Cohort</th><th>When</th>'+
-        '<th>Location</th><th>Type</th><th class="n">Capital</th><th class="n">Founders</th>'+
-        '<th class="n">Vols</th><th class="n">Sessions</th><th class="n">Pro bono</th></tr></thead>'+
-        '<tbody>'+sp.map(function(r){
-          return '<tr><td>'+esc(r.cohort)+'</td><td class="mono" style="font-size:11px">'+
-            esc(r.q)+'</td><td>'+esc(r.loc)+'</td><td><span class="pill '+
-            (r.type==='Cohort'?'ok':'warn')+'">'+esc(r.type.toUpperCase())+'</span></td>'+
-            '<td class="n">'+(r.cap?usdFull(r.cap):'-')+'</td><td class="n">'+(r.founders||'-')+
-            '</td><td class="n">'+(r.vols||'-')+'</td><td class="n">'+(r.sessions||'-')+
-            '</td><td class="n">'+(r.probono?usdFull(r.probono):'-')+'</td></tr>'; }).join('')+
-        '</tbody></table></div>'})+
-    card({span:'c12', title:'PitchProv events',
-      cap:'Date and venue live only in the file name. No response carries an email.',
-      body:'<div class="scroll"><table class="tbl"><thead><tr><th>Date</th><th>Venue</th>'+
-        '<th>Audience</th><th class="n">Responses</th><th class="n">Invite a friend</th></tr>'+
-        '</thead><tbody>'+FF.pitchprov.map(function(e){
-          return '<tr><td class="mono" style="font-size:11px">'+esc(e.date)+'</td><td>'+
-            esc(e.venue)+'</td><td><span class="pill '+(e.audience==='Students'?'warn':'ok')+
-            '">'+esc(e.audience.toUpperCase())+'</span></td><td class="n">'+e.n+
-            '</td><td class="n">'+(e.invite==null?'-':e.invite.toFixed(2)+' /5')+'</td></tr>';
-        }).join('')+'</tbody></table></div>'})+
-    notice('no','These four events are not comparable',
-      'Two served student audiences and two served founders and stakeholders. The student event '+
-      'scores 3.31 on inviting a friend against 4.86 and 4.81 at the founder events. Averaging '+
-      'across them produces a number that describes nobody. The confidence question has no '+
-      'parseable values in any of the four files.')+
+
+    card({span:'c12', title:'PitchProv feedback, by event',
+      cap:'All four rated questions, every event. Bars run strongly disagree to strongly agree. '+
+          'Click an event to filter. Correction to the Phase 1 note: these questions are fully '+
+          'answered, in words rather than digits, so a numeric-only read reports them as empty.',
+      body:'<div class="legend" style="margin:0 0 12px">'+
+        LIKERT_LABEL.map(function(l,i){
+          return '<span><i style="background:'+LIKERT_COLOR[i]+'"></i>'+l+'</span>'; }).join('')+
+        '</div><div class="grid" style="margin-top:0">'+qCards+'</div>'})+
+
+    card({span:'c6', title:'Who attends PitchProv',
+      cap:'Roles across the events in view. Attendees may pick more than one.',
+      body:barsData('pp_role', roleData.slice(0,8), {padl:150, color:'var(--s2)',
+        unit:' responses', noclick:true})})+
+    card({span:'c6', title:'Audience', cap:'Click to filter. These two groups are not comparable.',
+      body:barsData('pp_audience', groupList(pp,'audience',function(e){ return e.n; }),
+        {padl:150, color:'var(--s4)', unit:' responses'})})+
+
+    notice('no','The two audiences are not comparable',
+      'Two events served students and youth, two served founders and community stakeholders. '+
+      'On inviting a friend the student event at BUILD NYC scores 3.31 against 4.86 and 4.81 at '+
+      'the founder events. Averaging across them produces a number that describes nobody, which '+
+      'is why the charts above stay split by event rather than pooled.')+
     notice('warn','Volunteer pro bono value is computed without hours',
       'Value is filled on all <b>'+FF.volunteers.n+'</b> volunteer rows but hours on only <b>'+
       FF.volunteers.hours_filled+'</b>, leaving <b>'+(FF.volunteers.n-FF.volunteers.hours_filled)+
