@@ -456,6 +456,8 @@ def build():
         'meta': {
             'generated': TODAY,
             'sources': [{'id': s['id'], 'label': s['label'], 'stage': s['stage'],
+                         'file': (os.path.basename(s['path']) if s.get('path') else None),
+                         'join': s.get('join'),
                          'rows': len(R.get(s['id'], [])),
                          'sensitivity': s['sensitivity'],
                          'present': bool(s.get('path')) and s['sensitivity'] != 'excluded'

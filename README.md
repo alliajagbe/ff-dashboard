@@ -46,6 +46,11 @@ reaching `data.js`. Escalate where that file lives; do not route it through this
   Cross-tab     Explore page pivots any two of 16 dimensions against each other
   Deep links    page, year range and every filter encode into the URL
   Theme         light by default, dark by toggle, remembered per browser
+  Provenance    every KPI and card carries a chip naming the file it reads; clicking
+                opens source, file, row count, field, denominator, active filters,
+                build date and any conflicting source. Chips turn amber where two
+                sources disagree. Overview lists every source, including the three
+                named in the Data Audit with no file and the one excluded by policy.
 
 ### How crossfilter behaves
 

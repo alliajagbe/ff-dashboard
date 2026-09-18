@@ -175,6 +175,33 @@ select.ctl{padding-right:8px}
 .seg button[aria-pressed="true"]{background:var(--card); color:var(--text); box-shadow:var(--shadow)}
 .mk{cursor:pointer; transition:opacity .13s}
 .mk:hover{opacity:.82!important}
+.srcchip{font-family:"JetBrains Mono",monospace; font-size:8.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--text-3); background:var(--card-2); border:0;
+  border-radius:5px; padding:4px 7px; flex:none; display:inline-flex; align-items:center;
+  gap:5px; transition:all .12s; max-width:190px; overflow:hidden; white-space:nowrap}
+.srcchip:hover{color:var(--text); background:var(--card-3)}
+.srcchip.warn{color:var(--warn); background:var(--warn-w)}
+.srcchip .dot{width:5px; height:5px; border-radius:50%; background:currentColor; flex:none}
+#prov{position:fixed; right:0; top:0; bottom:0; width:min(430px,100%); z-index:60;
+  background:var(--card); border-left:1px solid var(--line); padding:24px 24px 34px;
+  overflow-y:auto; transform:translateX(102%); transition:transform .2s cubic-bezier(.32,.72,0,1);
+  box-shadow:var(--shadow-lg)}
+#prov.open{transform:none}
+#prov h3{font-size:18px; letter-spacing:-.03em; margin-top:7px; padding-right:36px}
+#prov .close{position:absolute; top:18px; right:18px; background:var(--card-2); border:0;
+  color:var(--text-3); font-size:15px; line-height:1; padding:8px 11px; border-radius:8px}
+#prov .close:hover{color:var(--text); background:var(--card-3)}
+#prov dl{margin:20px 0 0; display:grid; grid-template-columns:auto 1fr; gap:10px 16px; font-size:12.5px}
+#prov dt{font-family:"JetBrains Mono",monospace; font-size:9px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--text-3); padding-top:3px; white-space:nowrap}
+#prov dd{margin:0; color:var(--text); word-break:break-word}
+#prov .note{margin-top:18px; padding:13px 15px; background:var(--card-2); border-radius:10px;
+  font-size:12px; color:var(--text-2); line-height:1.65}
+#prov .note.warn{background:var(--warn-w); color:var(--text-2)}
+#prov .note b{color:var(--text)}
+#scrim{position:fixed; inset:0; background:rgba(8,12,26,.42); z-index:59; opacity:0;
+  pointer-events:none; transition:opacity .2s; backdrop-filter:blur(2px)}
+#scrim.open{opacity:1; pointer-events:auto}
 #tip{position:fixed; pointer-events:none; opacity:0; transition:opacity .1s; background:var(--text);
   color:var(--card); font-family:"JetBrains Mono",monospace; font-size:11px; line-height:1.55;
   padding:7px 10px; border-radius:7px; z-index:70; white-space:pre; font-variant-numeric:tabular-nums;
@@ -229,6 +256,14 @@ select.ctl{padding-right:8px}
     </div>
   </div>
 </div>
+<div id="scrim"></div>
+<aside id="prov" role="dialog" aria-modal="false" aria-labelledby="prov-t">
+  <button class="close" id="prov-x" type="button" aria-label="Close">&#x2715;</button>
+  <div class="eyebrow">Where this comes from</div>
+  <h3 id="prov-t"></h3>
+  <dl id="prov-dl"></dl>
+  <div id="prov-notes"></div>
+</aside>
 <div id="tip" class="mono"></div>
 <script src="data.js"></script>
 <script>
@@ -295,6 +330,61 @@ var LIKERT_COLOR=['var(--s4)','var(--lk2)','var(--s5)','var(--lk4)','var(--s2)']
 function dimName(d,v){
   var D=DIMS[d]; return (D && D.names && D.names[v]) ? D.names[v] : String(v);
 }
+
+/* ===================== provenance ===================== */
+/* Short names for the chips. Everything else comes from the pipeline. */
+var SHORT_SRC={grants:'Airtable grants', census:'Main census', impact_stats:'Impact stats',
+  sprint_outputs:'Sprint outputs', volunteers:'Volunteer list', advising_pre:'Advising survey',
+  pitchprov:'PitchProv surveys', directory:'Directory', hardware:'Hardware survey',
+  newsletter:'Newsletter survey', circle:'Circle survey', ten_year:'10 year survey',
+  acs_interest:'ACS interest', acs_application:'ACS application',
+  website_intake:'Website intake', payments:'Excluded'};
+var SRC={};
+FF.meta.sources.forEach(function(s0){
+  SRC[s0.id]=Object.assign({}, s0, {short:SHORT_SRC[s0.id]||s0.label});
+});
+function conflictsFor(prov){
+  if(!prov) return [];
+  var map={sprint_probono:'Pro bono value', volunteer_probono:'Pro bono value',
+           founders_funded:'Grantees per year'};
+  var want=map[prov]; if(!want) return [];
+  return FF.conflicts.filter(function(c){ return c.metric===want; });
+}
+function openProv(sid, prov, title){
+  var src=SRC[sid]||{}, p=FF.provenance[prov], conf=conflictsFor(prov);
+  $('prov-t').textContent=title||src.label||'Source';
+  var dl=[['Source', esc(src.label||sid)]];
+  if(src.file)  dl.push(['File','<span class="mono">'+esc(src.file)+'</span>']);
+  dl.push(['Rows loaded','<span class="mono">'+(src.rows||0)+'</span>']);
+  dl.push(['Journey stage', esc(src.stage||'-')]);
+  if(src.join) dl.push(['Join key','<span class="mono">'+esc(src.join)+'</span>']);
+  if(p){
+    if(p.field) dl.push(['Field','<span class="mono">'+esc(p.field)+'</span>']);
+    dl.push(['Unfiltered value','<span class="mono">'+esc(p.value)+'</span>']);
+    if(p.denom!=null) dl.push(['Denominator','<span class="mono">'+esc(p.denom)+'</span>']);
+  }
+  if(activeDims().length) dl.push(['Filters applied', activeDims().map(function(d){
+    return esc(DIMS[d].label)+': '+Array.from(st.f[d]).map(function(v){
+      return esc(dimName(d,v)); }).join(', '); }).join('<br>')]);
+  dl.push(['Years','<span class="mono">'+st.from+' to '+st.to+'</span>']);
+  dl.push(['Built','<span class="mono">'+esc(FF.meta.generated)+'</span>']);
+  $('prov-dl').innerHTML=dl.map(function(d){
+    return '<dt>'+d[0]+'</dt><dd>'+d[1]+'</dd>'; }).join('');
+  var notes='';
+  conf.forEach(function(c){
+    notes+='<div class="note warn"><b>Two sources disagree.</b> '+esc(c.why)+'<br><br>'+
+      c.values.map(function(v){ return esc(v.source)+': <b>'+(typeof v.value==='number'?
+        (v.value>1000?usdFull(v.value):v.value):'-')+'</b>'; }).join('<br>')+'</div>';
+  });
+  /* The pipeline falls back to the source note when a metric has none of its
+     own, so print each distinct note once. */
+  var seen={};
+  [p&&p.note, src.note].forEach(function(t){
+    if(t && !seen[t]){ seen[t]=1; notes+='<div class="note">'+esc(t)+'</div>'; } });
+  $('prov-notes').innerHTML=notes||'<div class="note">No caveats recorded for this source.</div>';
+  $('prov').classList.add('open'); $('scrim').classList.add('open');
+}
+function closeProv(){ $('prov').classList.remove('open'); $('scrim').classList.remove('open'); }
 
 /* ===================== state ===================== */
 var YEARS = ROWS.map(function(r){return r.y;})
@@ -568,13 +658,26 @@ function kpi(o){
       '<path d="'+pts+'" fill="none" stroke="'+(o.color||'var(--s1)')+'" stroke-width="1.6"/></svg>';
   }
   return '<div class="kpi">'+spark+'<div class="kt"><span class="kdot" style="background:'+
-    (o.color||'var(--s1)')+'"></span><span class="kl">'+esc(o.label)+'</span></div>'+
+    (o.color||'var(--s1)')+'"></span><span class="kl">'+esc(o.label)+'</span>'+
+    (o.src?'<span style="margin-left:auto">'+srcChip(o.src,o.prov,o.label)+'</span>':'')+'</div>'+
     '<div class="kv" style="color:'+(o.vc||'var(--text)')+'">'+o.value+'</div>'+
     (o.hint?'<div class="kh">'+o.hint+'</div>':'')+'</div>';
 }
+/* Every card names the file it reads. The chip opens the full provenance. */
+function srcChip(sid, prov, title){
+  if(!sid) return '';
+  var src=SRC[sid]; if(!src) return '';
+  var conf=conflictsFor(prov);
+  return '<button class="srcchip'+(conf.length?' warn':'')+'" data-src="'+sid+
+    '" data-prov="'+esc(prov||'')+'" data-srctitle="'+esc(title||'')+'">'+
+    '<span class="dot"></span>'+esc(conf.length?'2 sources':src.short)+'</button>';
+}
 function card(o){
+  var chip=srcChip(o.src, o.prov, o.title);
+  var right=(o.right||'')+chip;
   return '<div class="card '+(o.span||'c6')+'"><div class="cardhead"><div><h4>'+esc(o.title)+
-    '</h4></div>'+(o.right||'')+'</div>'+(o.cap?'<p class="cap">'+o.cap+'</p>':'')+o.body+'</div>';
+    '</h4></div>'+(right?'<div style="display:flex;gap:7px;align-items:center">'+right+'</div>':'')+
+    '</div>'+(o.cap?'<p class="cap">'+o.cap+'</p>':'')+o.body+'</div>';
 }
 function notice(kind,title,body,vs){
   return '<div class="notice" style="--c:var(--'+kind+')"><h4>'+esc(title)+'</h4><p>'+body+'</p>'+
@@ -598,37 +701,55 @@ overview: function(){
     .reduce(function(a,p){return a+p.v;},0);
 
   return '<div class="kpis">'+
-    kpi({label:'Capital deployed', value:usdFull(cap), color:'var(--s1)', spark:spark,
+    kpi({label:'Capital deployed', src:'grants', prov:'capital_total', value:usdFull(cap), color:'var(--s1)', spark:spark,
          hint:rs.length+' awards to '+f+' founders'})+
-    kpi({label:'Founders funded', value:nf(f), color:'var(--s2)',
+    kpi({label:'Founders funded', src:'grants', prov:'founders_funded', value:nf(f), color:'var(--s2)',
          hint:'Distinct people, deduplicated'})+
-    kpi({label:'Median award', value:usdFull(rs.length?
+    kpi({label:'Median award', src:'grants', value:usdFull(rs.length?
          rs.map(function(r){return r.amt;}).sort(function(a,b){return a-b;})[Math.floor(rs.length/2)]:0),
          color:'var(--s3)', hint:'Across the current selection'})+
-    kpi({label:'Still in business', value:sv.total?(100*alive/sv.total).toFixed(1)+'%':'0%',
+    kpi({label:'Still in business', src:'grants', value:sv.total?(100*alive/sv.total).toFixed(1)+'%':'0%',
          color:'var(--warn)', vc:'var(--warn)',
          hint:alive+' of '+sv.total+'. Last checked July 2024.'})+
-    kpi({label:'Advising sessions', value:nf(advN), color:'var(--s4)',
+    kpi({label:'Advising sessions', src:'impact_stats', prov:'advising_sessions', value:nf(advN), color:'var(--s4)',
          hint:'179 in 2021, falling to 10 in 2025'})+
     '</div><div class="grid">'+
-    card({span:'c8', title:'Capital deployed by year',
+    card({span:'c8', src:'grants', prov:'capital_total', title:'Capital deployed by year',
       cap:'Click a point to filter every chart on this page to that year.',
       right:'<div class="seg"><button data-m="capital" aria-pressed="'+(st.measure==='capital')+
         '">Capital</button><button data-m="founders" aria-pressed="'+(st.measure==='founders')+
         '">Founders</button></div>',
       body:area(apply('y'), {measure:st.measure})})+
-    card({span:'c4', title:'Solution type', cap:'Click a segment to filter.',
+    card({span:'c4', src:'grants', title:'Solution type', cap:'Click a segment to filter.',
       body:donut('solution', apply('solution'))})+
-    card({span:'c4', title:'Race', cap:DEMO_NOTE,
+    card({span:'c4', src:'grants', title:'Race', cap:DEMO_NOTE,
       body:bars('race', apply('race'), {color:'var(--s4)', padl:150})})+
-    card({span:'c4', title:'Growth stage', cap:'Click a bar to filter.',
+    card({span:'c4', src:'grants', title:'Growth stage', cap:'Click a bar to filter.',
       body:bars('stage', apply('stage'), {blank:'Not recorded', color:'var(--s2)', padl:104})})+
-    card({span:'c4', title:'Region', cap:'Click a bar to filter.',
+    card({span:'c4', src:'grants', title:'Region', cap:'Click a bar to filter.',
       body:bars('region', apply('region'), {color:'var(--s3)', padl:140})})+
     FF.conflicts.map(function(c){
       return notice('warn', c.metric, esc(c.why), c.values.map(function(v){
         return '<span><i>'+esc(v.source)+'</i> '+(typeof v.value==='number'?
           (v.value>1000?usdFull(v.value):v.value):'-')+'</span>'; }).join('')); }).join('')+
+    card({span:'c12', title:'Every source behind this dashboard',
+      cap:'What loaded, what is named in the Data Audit but has no file, and what is excluded by '+
+          'policy. Click any source chip elsewhere on the site for that file\u2019s detail.',
+      body:'<div class="scroll"><table class="tbl"><thead><tr><th>Source</th><th>File</th>'+
+        '<th>Stage</th><th class="n">Rows</th><th>Status</th></tr></thead><tbody>'+
+        FF.meta.sources.map(function(so){
+          var pill = so.sensitivity==='excluded' ? '<span class="pill no">EXCLUDED</span>'
+                   : !so.present ? '<span class="pill warn">NO FILE</span>'
+                   : '<span class="pill ok">LOADED</span>';
+          return '<tr><td><button class="srcchip" data-src="'+so.id+'" data-srctitle="'+
+            esc(so.label)+'" style="max-width:none;font-size:11px;letter-spacing:-.01em;'+
+            'text-transform:none;font-family:inherit;color:var(--text);background:none;padding:0">'+
+            esc(so.label)+'</button></td>'+
+            '<td class="mono" style="font-size:10.5px;color:var(--text-3);max-width:230px;'+
+            'overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(so.file||'\u2014')+
+            '</td><td style="color:var(--text-3);font-size:11.5px">'+esc(so.stage)+
+            '</td><td class="n">'+(so.rows||'\u2014')+'</td><td>'+pill+'</td></tr>';
+        }).join('')+'</tbody></table></div>'})+
     notice('no','Thirty three funded founders can never be joined to anything',
       'The grants table holds <b>'+FF.grants.founders+'</b> founders but only <b>'+
       FF.founders.by_population.funded+'</b> carry an email address. Email is the only key '+
@@ -651,15 +772,15 @@ explore: function(){
     kpi({label:'Share of all founders', value:(100*founders(rs)/FF.grants.founders).toFixed(0)+'%',
          color:'var(--s4)', hint:'Denominator is every funded founder'})+
     '</div><div class="grid">'+
-    card({span:'c12', title:'Cross-tab any two dimensions',
+    card({span:'c12', src:'grants', title:'Cross-tab any two dimensions',
       cap:'Distinct founders at each intersection. Click a cell to filter both dimensions at once. '+
           'Shading is relative to the largest cell in view.',
       right:'<div style="display:flex;gap:6px"><select class="ctl" id="xa">'+opts(st.xa)+
         '</select><select class="ctl" id="xb">'+opts(st.xb)+'</select></div>',
       body:matrix(st.xa, st.xb, rs)})+
-    card({span:'c6', title:DIMS[st.xa].label, cap:'Click to filter.',
+    card({span:'c6', src:'grants', title:DIMS[st.xa].label, cap:'Click to filter.',
       body:bars(st.xa, apply(st.xa), {top:12, blank:'Not recorded', padl:140})})+
-    card({span:'c6', title:DIMS[st.xb].label, cap:'Click to filter.',
+    card({span:'c6', src:'grants', title:DIMS[st.xb].label, cap:'Click to filter.',
       body:bars(st.xb, apply(st.xb), {top:12, blank:'Not recorded', color:'var(--s2)', padl:140})})+
     '</div>';
 },
@@ -667,21 +788,21 @@ explore: function(){
 discover: function(){
   var c=FF.census;
   return '<div class="kpis">'+
-    kpi({label:'Census records', value:nf(c.n), color:'var(--s1)',
+    kpi({label:'Census records', src:'census', value:nf(c.n), color:'var(--s1)',
          hint:'100% email, 100% growth stage'})+
-    kpi({label:'Distinct census emails', value:nf(FF.founders.by_population.census),
+    kpi({label:'Distinct census emails', src:'census', value:nf(FF.founders.by_population.census),
          color:'var(--s2)', hint:'Only '+FF.founders.overlaps.census_funded+' match a funded founder'})+
     kpi({label:'Founders known', value:nf(FF.founders.universe), color:'var(--s3)',
          hint:'Across grants, census, directory and interest forms'})+
     kpi({label:'AI Civic Studio', value:nf(FF.discover.acs_interest+FF.discover.acs_application),
          color:'var(--s4)', hint:'New programme, 2026'})+
     '</div><div class="grid">'+
-    card({span:'c6', title:'Census growth stage',
+    card({span:'c6', src:'census', title:'Census growth stage',
       cap:'From the census, which is a different and larger population than the grants table.',
       body:bars('stage', apply('stage'), {blank:'Not recorded', padl:104})})+
-    card({span:'c6', title:'Census solution type', cap:'',
+    card({span:'c6', src:'census', title:'Census solution type', cap:'',
       body:bars('solution', apply('solution'), {blank:'Not recorded', color:'var(--s2)', padl:104})})+
-    card({span:'c12', title:'Census field coverage',
+    card({span:'c12', src:'census', title:'Census field coverage',
       cap:'Where the census is strong and where it stops.',
       body:'<div class="scroll"><table class="tbl"><thead><tr><th>Field</th><th>Coverage</th>'+
         '<th class="n">Filled</th></tr></thead><tbody>'+c.coverage.map(function(r){
@@ -699,15 +820,15 @@ apply_: function(){
   var scored=f.filter(function(r){return r.label!=='(not set)';})
               .reduce(function(a,r){return a+r.n;},0);
   return '<div class="kpis">'+
-    kpi({label:'In the census', value:nf(FF.census.n), color:'var(--s1)', hint:'The pool considered'})+
-    kpi({label:'Given a status', value:nf(scored), color:'var(--s2)',
+    kpi({label:'In the census', src:'census', value:nf(FF.census.n), color:'var(--s1)', hint:'The pool considered'})+
+    kpi({label:'Given a status', src:'census', prov:'selection_funnel', value:nf(scored), color:'var(--s2)',
          hint:(FF.census.n-scored)+' were never triaged'})+
     kpi({label:'Completed', value:nf(v('Completed')), color:'var(--ok)', vc:'var(--ok)',
          hint:'Reached the end of a cohort'})+
     kpi({label:'Not eligible', value:nf(v('Not Eligible')), color:'var(--no)', vc:'var(--no)',
          hint:'No reason is recorded anywhere'})+
     '</div><div class="grid">'+
-    card({span:'c6', title:'Selection funnel',
+    card({span:'c6', src:'census', prov:'selection_funnel', title:'Selection funnel',
       cap:'Built from the census Cohort Status field, because no other selection record survives.',
       body:(function(){
         var steps=[{l:'In the census',n:FF.census.n,c:'var(--s1)'},
@@ -829,37 +950,37 @@ program: function(){
     return {v:k,label:k,n:roleAgg[k]}; }).sort(function(a,b){ return b.n-a.n; });
 
   return '<div class="kpis">'+
-    kpi({label:'Cohorts and series', value:nf(sp.length), color:'var(--s1)',
+    kpi({label:'Cohorts and series', src:'sprint_outputs', value:nf(sp.length), color:'var(--s1)',
          hint:sum(sp,'founders')+' founder seats, '+sum(sp,'sessions')+' sessions'})+
-    kpi({label:'Pro bono delivered', value:usdFull(sum(sp,'probono')), color:'var(--s3)',
+    kpi({label:'Pro bono delivered', src:'sprint_outputs', prov:'sprint_probono', value:usdFull(sum(sp,'probono')), color:'var(--s3)',
          hint:sum(sp,'vols')+' volunteer engagements'})+
-    kpi({label:'Sprint capital', value:usdFull(sum(sp,'cap')), color:'var(--s2)',
+    kpi({label:'Sprint capital', src:'sprint_outputs', prov:'sprint_capital', value:usdFull(sum(sp,'cap')), color:'var(--s2)',
          hint:'Sprint programme only, not total capital'})+
-    kpi({label:'PitchProv responses', value:nf(ppN), color:'var(--s4)',
+    kpi({label:'PitchProv responses', src:'pitchprov', prov:'pitchprov_responses', value:nf(ppN), color:'var(--s4)',
          hint:pp.length+' events, '+sum(pp,'comments')+' written comments'})+
-    kpi({label:'Awards in selection', value:usdFull(capital(rs)), color:'var(--s5)',
+    kpi({label:'Awards in selection', src:'grants', prov:'capital_total', value:usdFull(capital(rs)), color:'var(--s5)',
          hint:rs.length+' awards to '+founders(rs)+' founders'})+
     '</div><div class="grid">'+
 
-    card({span:'c8', title:'Cohorts over time',
+    card({span:'c8', src:'sprint_outputs', prov:'sprint_probono', title:'Cohorts over time',
       cap:'Each bubble is one cohort. Height is pro bono value delivered, size is founders served. '+
           'Click a bubble to filter by its type.',
       body:cohortScatter(sp)})+
-    card({span:'c4', title:'Type and status', cap:'Click to filter every cohort chart.',
+    card({span:'c4', src:'sprint_outputs', title:'Type and status', cap:'Click to filter every cohort chart.',
       body:barsData('sp_type', typeData, {padl:112, color:'var(--s1)', unit:' cohorts'})+
            '<div style="height:10px"></div>'+
            barsData('sp_status', groupList(sp,'status'),
              {padl:112, color:'var(--s2)', unit:' cohorts'})})+
 
-    card({span:'c4', title:'Cohort themes',
+    card({span:'c4', src:'sprint_outputs', title:'Cohort themes',
       cap:'Several rows file a city here instead of a theme, which is a data entry issue, not a theme.',
       body:barsData('sp_theme', themeData.slice(0,10), {padl:150, color:'var(--s2)', unit:' cohorts'})})+
-    card({span:'c4', title:'Delivery partners', cap:'Click to filter.',
+    card({span:'c4', src:'sprint_outputs', title:'Delivery partners', cap:'Click to filter.',
       body:barsData('sp_partner', partnerData.slice(0,10), {padl:130, color:'var(--s3)', unit:' cohorts'})})+
-    card({span:'c4', title:'Where cohorts ran', cap:'Click to filter.',
+    card({span:'c4', src:'sprint_outputs', title:'Where cohorts ran', cap:'Click to filter.',
       body:barsData('sp_loc', locData.slice(0,10), {padl:120, color:'var(--s4)', unit:' cohorts'})})+
 
-    card({span:'c8', title:'Advising sessions facilitated',
+    card({span:'c8', src:'impact_stats', prov:'advising_sessions', title:'Advising sessions facilitated',
       cap:'The Phase 1 note says advising is invisible. It is not. The trend is the story.',
       body:(function(){
         var pts=FF.impact_series.filter(function(s){
@@ -891,11 +1012,11 @@ program: function(){
             String(p.year).slice(2)+'</text>'); });
         return o.join('')+'</svg>';
       })()})+
-    card({span:'c4', title:'Award programme',
+    card({span:'c4', src:'grants', title:'Award programme',
       cap:'From the grants table. Filters the award figures above and the awards chart below.',
       body:bars('purpose', apply('purpose'), {padl:150, color:'var(--s2)'})})+
 
-    card({span:'c12', title:'PitchProv feedback, by event',
+    card({span:'c12', src:'pitchprov', prov:'pitchprov_responses', title:'PitchProv feedback, by event',
       cap:'All four rated questions, every event. Bars run strongly disagree to strongly agree. '+
           'Click an event to filter. Correction to the Phase 1 note: these questions are fully '+
           'answered, in words rather than digits, so a numeric-only read reports them as empty.',
@@ -904,11 +1025,11 @@ program: function(){
           return '<span><i style="background:'+LIKERT_COLOR[i]+'"></i>'+l+'</span>'; }).join('')+
         '</div><div class="grid" style="margin-top:0">'+qCards+'</div>'})+
 
-    card({span:'c6', title:'Who attends PitchProv',
+    card({span:'c6', src:'pitchprov', title:'Who attends PitchProv',
       cap:'Roles across the events in view. Attendees may pick more than one.',
       body:barsData('pp_role', roleData.slice(0,8), {padl:150, color:'var(--s2)',
         unit:' responses', noclick:true})})+
-    card({span:'c6', title:'Audience', cap:'Click to filter. These two groups are not comparable.',
+    card({span:'c6', src:'pitchprov', title:'Audience', cap:'Click to filter. These two groups are not comparable.',
       body:barsData('pp_audience', groupList(pp,'audience',function(e){ return e.n; }),
         {padl:150, color:'var(--s4)', unit:' responses'})})+
 
@@ -928,16 +1049,16 @@ program: function(){
 community: function(){
   var c=FF.community;
   return '<div class="kpis">'+
-    kpi({label:'Directory entries', value:nf(c.directory), color:'var(--s1)',
+    kpi({label:'Directory entries', src:'directory', value:nf(c.directory), color:'var(--s1)',
          hint:'The public founder roster'})+
-    kpi({label:'Hardware survey', value:nf(c.hardware), color:'var(--s2)',
+    kpi({label:'Hardware survey', src:'hardware', value:nf(c.hardware), color:'var(--s2)',
          hint:c.hardware_apple+' use Apple products'})+
-    kpi({label:'Newsletter survey', value:nf(c.newsletter), color:'var(--no)', vc:'var(--no)',
+    kpi({label:'Newsletter survey', src:'newsletter', value:nf(c.newsletter), color:'var(--no)', vc:'var(--no)',
          hint:'Too few to analyse'})+
-    kpi({label:'Circle community', value:nf(c.circle), color:'var(--no)', vc:'var(--no)',
+    kpi({label:'Circle community', src:'circle', value:nf(c.circle), color:'var(--no)', vc:'var(--no)',
          hint:'Too few to analyse'})+
     '</div><div class="grid">'+
-    card({span:'c6', title:'Directory by industry', cap:'',
+    card({span:'c6', src:'directory', title:'Directory by industry', cap:'',
       body:(function(){
         var d=c.directory_industry, mx=Math.max.apply(null,d.map(function(r){return r.n;}))||1;
         return '<svg viewBox="0 0 340 '+(d.length*26)+'">'+d.map(function(r,i){
@@ -948,7 +1069,7 @@ community: function(){
             '<text x="'+(172+w)+'" y="'+(i*26+16)+'" font-size="10.5" fill="var(--text-2)" '+
             'font-family="JetBrains Mono, monospace">'+r.n+'</text>'; }).join('')+'</svg>';
       })()})+
-    card({span:'c6', title:'Directory by award year', cap:'',
+    card({span:'c6', src:'directory', title:'Directory by award year', cap:'',
       body:(function(){
         var d=c.directory_years.filter(function(r){
           return +r.label>=st.from && +r.label<=st.to; });
@@ -974,20 +1095,20 @@ alumni: function(){
   var rs=apply(), f=founders(rs), sv=surviving(rs), alive=sv.yes;
   var stamp=FF.grants.last_updated[0]||{stamp:'unknown',n:0};
   return '<div class="kpis">'+
-    kpi({label:'Still in business', value:sv.total?(100*alive/sv.total).toFixed(1)+'%':'0%',
+    kpi({label:'Still in business', src:'grants', value:sv.total?(100*alive/sv.total).toFixed(1)+'%':'0%',
          color:'var(--warn)', vc:'var(--warn)', hint:alive+' of '+sv.total+' in selection'})+
-    kpi({label:'Alumni founders', value:nf(f), color:'var(--s1)', hint:'Every funded founder'})+
-    kpi({label:'In the public directory', value:nf(FF.community.directory), color:'var(--s2)',
+    kpi({label:'Alumni founders', src:'grants', value:nf(f), color:'var(--s1)', hint:'Every funded founder'})+
+    kpi({label:'In the public directory', src:'directory', value:nf(FF.community.directory), color:'var(--s2)',
          hint:FF.founders.overlaps.directory_funded+' match a funded founder'})+
-    kpi({label:'Ten year vision survey', value:nf(FF.community.ten_year), color:'var(--no)',
+    kpi({label:'Ten year vision survey', src:'ten_year', value:nf(FF.community.ten_year), color:'var(--no)',
          vc:'var(--no)', hint:'Fielded 2026. One response so far.'})+
     '</div><div class="grid">'+
-    card({span:'c4', title:'Survival rate',
+    card({span:'c4', src:'grants', title:'Survival rate',
       cap:'One verdict per founder, from their most recent participation year.',
       body:ring(alive, sv.total, 'STILL IN BUSINESS', 'var(--warn)')})+
-    card({span:'c4', title:'Status as stored', cap:'Click to filter.',
+    card({span:'c4', src:'grants', title:'Status as stored', cap:'Click to filter.',
       body:bars('alive', apply('alive'), {color:'var(--s3)', padl:86})})+
-    card({span:'c4', title:'Race', cap:DEMO_NOTE,
+    card({span:'c4', src:'grants', title:'Race', cap:DEMO_NOTE,
       body:bars('race', apply('race'), {color:'var(--s4)', padl:150})})+
     notice('warn','This number has not been verified since July 2024',
       'Every record carries a value, so the field looks complete and nobody questions it. But <b>'+
@@ -1086,6 +1207,9 @@ function render(){
 
 /* ===================== events ===================== */
 document.addEventListener('click',function(e){
+  var sc=e.target.closest('[data-src]');
+  if(sc){ openProv(sc.dataset.src, sc.dataset.prov, sc.dataset.srctitle); return; }
+  if(e.target.closest('#prov-x')||e.target.closest('#scrim')){ closeProv(); return; }
   var p=e.target.closest('[data-p]');
   if(p){ st.page=p.dataset.p; render(); scrollTo({top:0,behavior:'smooth'}); return; }
   var rm=e.target.closest('[data-rm]');
@@ -1146,6 +1270,8 @@ function setTheme(t){
 $('theme').onclick=function(){
   setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
 };
+
+addEventListener('keydown',function(e){ if(e.key==='Escape') closeProv(); });
 
 readHash();
 fill($('fy'),yopts,st.from); fill($('ty'),yopts,st.to);
